@@ -30,10 +30,20 @@ namespace RipCheck
         {
             var settings = new ReadingSettings
             {
+                InvalidChannelEventParameterValuePolicy = InvalidChannelEventParameterValuePolicy.ReadValid,
                 InvalidChunkSizePolicy = InvalidChunkSizePolicy.Ignore,
                 NotEnoughBytesPolicy = NotEnoughBytesPolicy.Ignore
             };
-            var midiFile = MidiFile.Read(midiPath, settings);
+            MidiFile midiFile;
+            try
+            {
+                midiFile = MidiFile.Read(midiPath, settings);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine($"Error parsing {midiPath}");
+                return;
+            }
             var song = new CHSong(midiFile);
             Warnings warnings = song.RunChecks();
 
