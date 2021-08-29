@@ -25,5 +25,8 @@ through every .mid file contained within. An example usage is
 > RipCheck.exe "D:/RB conversions/"
 ```
 
+If you want to only check .mid files specifically named notes.mid, pass the
+option --notesonly.
+
 All warnings will be printed to the console. It is advised to redirect the
 output to a file.

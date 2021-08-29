@@ -1,4 +1,5 @@
-﻿using Melanchall.DryWetMidi.Core;
+﻿using CommandLine;
+using Melanchall.DryWetMidi.Core;
 using System;
 using System.IO;
 
@@ -6,9 +7,40 @@ namespace RipCheck
 {
     class Program
     {
+        public class Options
+        {
+            [Option(Required = false, HelpText = "Only scan files called notes.mid.")]
+            public bool NotesOnly { get; set; }
+
+            [Value(0, HelpText = "Directory containing the .mid files.")]
+            public string Directory { get; set; }
+        }
+
         static void Main(string[] args)
         {
-            var di = new DirectoryInfo(args[0]);
+            bool notesOnly = false;
+            string directory = "";
+            bool earlyReturn = false;
+            Parser.Default.ParseArguments<Options>(args)
+                .WithParsed(o =>
+                {
+                    notesOnly = o.NotesOnly;
+                    directory = o.Directory;
+                    if (directory is null)
+                    {
+                        earlyReturn = true;
+                        Console.WriteLine("Please specify the directory");
+                    }
+                })
+                .WithNotParsed(_ =>
+                {
+                    earlyReturn = true;
+                });
+            if (earlyReturn)
+            {
+                return;
+            }
+            var di = new DirectoryInfo(directory);
             if (!di.Exists)
             {
                 Console.WriteLine($"Directory {args[0]} does not exist");
@@ -19,7 +51,8 @@ namespace RipCheck
                 RecurseSubdirectories = true,
                 ReturnSpecialDirectories = false
             };
-            FileInfo[] files = di.GetFiles("*.mid", options);
+            string search = notesOnly ? "notes.mid" : "*.mid";
+            FileInfo[] files = di.GetFiles(search, options);
             foreach (FileInfo midi in files)
             {
                 CheckMid(midi.FullName);
