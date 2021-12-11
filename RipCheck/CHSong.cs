@@ -51,6 +51,9 @@ namespace RipCheck
             warnings.AddRange(bassPart?.CheckChordSnapping());
             warnings.AddRange(keysPart?.CheckChordSnapping());
 
+            warnings.AddRange(guitarPart?.CheckDisjointChords());
+            warnings.AddRange(bassPart?.CheckDisjointChords());
+
             return warnings;
         }
 

@@ -9,7 +9,7 @@
     <PublishTrimmed>true</PublishTrimmed>
     <PublishReadyToRun>true</PublishReadyToRun>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-    <Version>0.1.1</Version>
+    <Version>0.2.0</Version>
     <Authors>Raymond Wright</Authors>
   </PropertyGroup>
 

@@ -52,5 +52,35 @@ namespace RipCheck
 
             return warnings;
         }
+
+        public Warnings CheckDisjointChords()
+        {
+            var warnings = new Warnings();
+
+            foreach (KeyValuePair<Difficulty, IList<GuitarNote>> item in notes)
+            {
+                Difficulty difficulty = item.Key;
+                (long, long)[] positionLengthPairs = item.Value.Select(n => (n.Position, n.Length)).OrderBy(p => p).ToArray();
+                IEnumerable<((long, long), (long, long))> pairs = positionLengthPairs.Zip(positionLengthPairs.Skip(1));
+                foreach (var ((earlyPos, earlyLength), (latePos, lateLength)) in pairs)
+                {
+                    if (earlyPos != latePos)
+                    {
+                        continue;
+                    }
+                    if (earlyLength == lateLength)
+                    {
+                        continue;
+                    }
+                    if (lateLength <= 160)
+                    {
+                        continue;
+                    }
+                    warnings.Add($"Disjoint chord: {name} {difficulty} at {latePos}");
+                }
+            }
+
+            return warnings;
+        }
     }
 }
