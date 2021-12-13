@@ -79,6 +79,10 @@ namespace RipCheck
             warnings.AddRange(guitarPart?.CheckDisjointChords());
             warnings.AddRange(bassPart?.CheckDisjointChords());
 
+            warnings.AddRange(guitarPart?.CheckUnknownNotes());
+            warnings.AddRange(bassPart?.CheckUnknownNotes());
+            warnings.AddRange(keysPart?.CheckUnknownNotes());
+
             return warnings;
         }
 

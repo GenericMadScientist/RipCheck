@@ -1,5 +1,6 @@
 ﻿using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,6 +9,7 @@ namespace RipCheck
     class GuitarTrack
     {
         private readonly Dictionary<Difficulty, IList<GuitarNote>> notes = new();
+        private readonly List<Note> unknownNotes = new();
         private readonly string name;
 
         public GuitarTrack(TrackChunk track, string instrument)
@@ -22,6 +24,13 @@ namespace RipCheck
             foreach (Note note in track.GetNotes())
             {
                 byte key = note.NoteNumber;
+
+                if (!Enum.IsDefined(typeof(GuitarTrackNotes), key))
+                {
+                    unknownNotes.Add(note);
+                    continue;
+                }
+
                 if (key < 60 || key > 100 || (key % 12) > 4)
                 {
                     continue;
@@ -77,6 +86,21 @@ namespace RipCheck
                         continue;
                     }
                     warnings.Add($"Disjoint chord: {name} {difficulty} at {latePos}");
+                }
+            }
+
+            return warnings;
+        }
+
+        public Warnings CheckUnknownNotes()
+        {
+            var warnings = new Warnings();
+
+            if (unknownNotes.Count != 0)
+            {
+                foreach (Note note in unknownNotes)
+                {
+                    warnings.Add($"Unknown note: {note.NoteNumber} on {name} at {note.Time} ");
                 }
             }
 
