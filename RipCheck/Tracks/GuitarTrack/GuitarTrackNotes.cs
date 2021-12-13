@@ -2,7 +2,7 @@ namespace RipCheck
 {
     enum GuitarTrackNotes : byte
     {
-        // This list does not include CH's tap note marker or note-based open notes
+        // Does not include CH's tap note marker or note-based open notes
         TrillLane = 127,
         StrumLane = 126,
         BRE1 = 124,
@@ -13,9 +13,10 @@ namespace RipCheck
         Overdrive = 116,
         GH1BigNote = 110,
         GH1VocalistMouth = 108,
-        ScoreDuelPlayer1 = 106,
-        ScoreDuelPlayer2 = 105,
+        ScoreDuelPlayer2 = 106,
+        ScoreDuelPlayer1 = 105,
         Solo = 103,
+
         ExpertGHFaceOff2 = 106,
         ExpertGHFaceOff1 = 105,
         ExpertGHStarPower = 103,
@@ -26,6 +27,7 @@ namespace RipCheck
         ExpertYellow = 98,
         ExpertRed = 97,
         ExpertGreen = 96,
+
         HardGHFaceOff2 = 94,
         HardGHFaceOff1 = 93,
         HardGHStarPower = 91,
@@ -36,6 +38,7 @@ namespace RipCheck
         HardYellow = 86,
         HardRed = 85,
         HardGreen = 84,
+
         MediumGHFaceOff2 = 82,
         MediumGHFaceOff1 = 81,
         MediumGHStarPower = 89,
@@ -46,6 +49,7 @@ namespace RipCheck
         MediumYellow = 74,
         MediumRed = 73,
         MediumGreen = 72,
+
         EasyGHFaceOff2 = 70,
         EasyGHFaceOff1 = 69,
         EasyGHStarPower = 67,
@@ -55,6 +59,7 @@ namespace RipCheck
         EasyYellow = 62,
         EasyRed = 61,
         EasyGreen = 60,
+
         LeftHand20 = 59,
         LeftHand19 = 58,
         LeftHand18 = 57,
