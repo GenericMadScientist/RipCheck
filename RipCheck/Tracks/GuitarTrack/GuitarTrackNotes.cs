@@ -1,6 +1,6 @@
 namespace RipCheck
 {
-    enum GuitarTrackNotes : byte
+    enum GuitarTrackNote : byte
     {
         // Does not include CH's tap note marker or note-based open notes
         TrillLane = 127,

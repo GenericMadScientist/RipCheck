@@ -1,4 +1,4 @@
-﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace RipCheck
             {
                 byte key = note.NoteNumber;
 
-                if (!Enum.IsDefined(typeof(GuitarTrackNotes), key))
+                if (!Enum.IsDefined(typeof(GuitarTrackNote), key))
                 {
                     unknownNotes.Add(note);
                     continue;
