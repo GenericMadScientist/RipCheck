@@ -1,4 +1,5 @@
 ﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Interaction;
 
 namespace RipCheck
 {
@@ -8,6 +9,7 @@ namespace RipCheck
         private readonly GuitarTrack guitarPart;
         private readonly GuitarTrack bassPart;
         private readonly GuitarTrack keysPart;
+        private readonly TempoMap tempoMap;
 
         public CHSong(MidiFile midi)
         {
@@ -16,6 +18,8 @@ namespace RipCheck
             {
                 resolution = timeDivision.TicksPerQuarterNote;
             }
+
+            tempoMap = midi.GetTempoMap();
 
             foreach (TrackChunk track in midi.GetTrackChunks())
             {
@@ -47,12 +51,12 @@ namespace RipCheck
                 warnings.Add($"Midi has resolution {resolution}");
             }
 
-            warnings.AddRange(guitarPart?.CheckChordSnapping());
-            warnings.AddRange(bassPart?.CheckChordSnapping());
-            warnings.AddRange(keysPart?.CheckChordSnapping());
+            warnings.AddRange(guitarPart?.CheckChordSnapping(tempoMap));
+            warnings.AddRange(bassPart?.CheckChordSnapping(tempoMap));
+            warnings.AddRange(keysPart?.CheckChordSnapping(tempoMap));
 
-            warnings.AddRange(guitarPart?.CheckDisjointChords());
-            warnings.AddRange(bassPart?.CheckDisjointChords());
+            warnings.AddRange(guitarPart?.CheckDisjointChords(tempoMap));
+            warnings.AddRange(bassPart?.CheckDisjointChords(tempoMap));
 
             return warnings;
         }
