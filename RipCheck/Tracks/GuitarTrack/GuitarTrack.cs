@@ -9,8 +9,9 @@ namespace RipCheck
     class GuitarTrack
     {
         private readonly Dictionary<Difficulty, IList<GuitarNote>> notes = new();
-        private readonly List<Note> unknownNotes = new();
         private readonly string name;
+
+        private Warnings trackWarnings = new Warnings();
 
         public GuitarTrack(TrackChunk track, string instrument)
         {
@@ -27,7 +28,7 @@ namespace RipCheck
 
                 if (!Enum.IsDefined(typeof(GuitarTrackNote), key))
                 {
-                    unknownNotes.Add(note);
+                    trackWarnings.Add($"Unknown note: {note.NoteNumber} on {name} at {note.Time} ");
                     continue;
                 }
 
@@ -35,6 +36,7 @@ namespace RipCheck
                 {
                     continue;
                 }
+
                 Difficulty difficulty = (Difficulty)((key - 60) / 12);
                 GuitarFretColour colour = (GuitarFretColour)(key % 12);
                 notes[difficulty].Add(new GuitarNote(colour, note.Time, note.Length));
@@ -86,21 +88,6 @@ namespace RipCheck
                         continue;
                     }
                     warnings.Add($"Disjoint chord: {name} {difficulty} at {latePos}");
-                }
-            }
-
-            return warnings;
-        }
-
-        public Warnings CheckUnknownNotes()
-        {
-            var warnings = new Warnings();
-
-            if (unknownNotes.Count != 0)
-            {
-                foreach (Note note in unknownNotes)
-                {
-                    warnings.Add($"Unknown note: {note.NoteNumber} on {name} at {note.Time} ");
                 }
             }
 
