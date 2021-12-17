@@ -53,6 +53,7 @@ namespace RipCheck
         EasyGHFaceOff2 = 70,
         EasyGHFaceOff1 = 69,
         EasyGHStarPower = 67,
+        EasyForceStrum = 66,
         EasyForceHOPO = 65,
         EasyOrange = 64,
         EasyBlue = 63,
