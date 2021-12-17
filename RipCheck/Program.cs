@@ -36,16 +36,19 @@ namespace RipCheck
                 {
                     earlyReturn = true;
                 });
+
             if (earlyReturn)
             {
                 return;
             }
+
             var di = new DirectoryInfo(directory);
             if (!di.Exists)
             {
                 Console.WriteLine($"Directory {args[0]} does not exist");
                 return;
             }
+
             var options = new EnumerationOptions
             {
                 RecurseSubdirectories = true,
@@ -67,6 +70,7 @@ namespace RipCheck
                 InvalidChunkSizePolicy = InvalidChunkSizePolicy.Ignore,
                 NotEnoughBytesPolicy = NotEnoughBytesPolicy.Ignore
             };
+
             MidiFile midiFile;
             try
             {
@@ -77,9 +81,9 @@ namespace RipCheck
                 Console.WriteLine($"Error parsing {midiPath}");
                 return;
             }
+
             var song = new CHSong(midiFile);
             Warnings warnings = song.RunChecks();
-
             if (!warnings.IsEmpty())
             {
                 Console.WriteLine($"File {midiPath} has problems");
