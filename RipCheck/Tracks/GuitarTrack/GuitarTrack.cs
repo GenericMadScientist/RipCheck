@@ -1,4 +1,4 @@
-﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
@@ -9,13 +9,15 @@ namespace RipCheck
     class GuitarTrack
     {
         private readonly Dictionary<Difficulty, IList<GuitarNote>> notes = new();
+        private readonly TempoMap tempoMap;
         private readonly string name;
 
         private Warnings trackWarnings = new Warnings();
 
-        public GuitarTrack(TrackChunk track, string instrument)
+        public GuitarTrack(TrackChunk track, TempoMap _tempoMap, string instrument)
         {
             name = instrument;
+            tempoMap = _tempoMap;
 
             notes.Add(Difficulty.Easy, new List<GuitarNote>());
             notes.Add(Difficulty.Medium, new List<GuitarNote>());
@@ -28,7 +30,13 @@ namespace RipCheck
 
                 if (!Enum.IsDefined(typeof(GuitarTrackNote), key))
                 {
-                    trackWarnings.Add($"Unknown note: {note.NoteNumber} on {name} at {note.Time} ");
+                    var position = note.Time;
+                    var time = (MetricTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.Metric, tempoMap);
+                    var ticks = (BarBeatTicksTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.BarBeatTicks, tempoMap);
+                    int minutes = 60 * time.Hours + time.Minutes;
+                    int seconds = time.Seconds;
+                    int millisecs = time.Milliseconds;
+                    trackWarnings.Add($"Unknown note: {key} on {name} at {minutes}:{seconds:d2}.{millisecs:d3} (MBT: {ticks.Bars}.{ticks.Beats}.{ticks.Ticks})");
                     continue;
                 }
 
@@ -43,17 +51,17 @@ namespace RipCheck
             }
         }
 
-        public Warnings RunChecks(TempoMap tempoMap)
+        public Warnings RunChecks()
         {
-            trackWarnings.AddRange(CheckChordSnapping(tempoMap));
+            trackWarnings.AddRange(CheckChordSnapping());
             if (name != "PART KEYS")
             {
-                trackWarnings.AddRange(CheckDisjointChords(tempoMap));
+                trackWarnings.AddRange(CheckDisjointChords());
             }
             return trackWarnings;
         }
 
-        public Warnings CheckChordSnapping(TempoMap tempoMap)
+        public Warnings CheckChordSnapping()
         {
             var warnings = new Warnings();
 
@@ -78,7 +86,7 @@ namespace RipCheck
             return warnings;
         }
 
-        public Warnings CheckDisjointChords(TempoMap tempoMap)
+        public Warnings CheckDisjointChords()
         {
             var warnings = new Warnings();
 
