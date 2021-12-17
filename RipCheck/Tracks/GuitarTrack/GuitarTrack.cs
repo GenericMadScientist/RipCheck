@@ -115,7 +115,7 @@ namespace RipCheck
                     int minutes = 60 * lateTime.Hours + lateTime.Minutes;
                     int seconds = lateTime.Seconds;
                     int millisecs = lateTime.Milliseconds;
-                    warnings.Add($"Disjoint chord: {name} {difficulty} at {minutes}:{seconds:d2}.{millisecs:d3} (MBT: {ticks.Bars}.{ticks.Beats}.{ticks.Ticks}");
+                    warnings.Add($"Disjoint chord: {name} {difficulty} at {minutes}:{seconds:d2}.{millisecs:d3} (MBT: {ticks.Bars}.{ticks.Beats}.{ticks.Ticks})");
                 }
             }
 
