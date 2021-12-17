@@ -1,4 +1,4 @@
-﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Core;
 using System.Collections.Generic;
 
 namespace RipCheck
@@ -83,22 +83,17 @@ namespace RipCheck
             {
                 if (guitarTracks.ContainsKey(name))
                 {
-                    guitarTracks[name].CheckChordSnapping();
-                    guitarTracks[name].CheckUnknownNotes();
-                    if (name != "PART KEYS")
-                    {
-                        guitarTracks[name].CheckDisjointChords();
-                    }
+                    warnings.AddRange(guitarTracks[name].RunChecks());
                 }
             }
 
-            // drumTrack?.CheckUnknownNotes();
+            // drumTrack?.RunChecks();
             
             // foreach (string name in vocalsTracks.Keys)
             // {
             //     if (vocalsTracks.ContainsKey(name))
             //     {
-            //         vocalsTracks[name].CheckSomething();
+            //         warnings.AddRange(vocalsTracks[name].RunChecks());
             //     }
             // }
             
@@ -106,7 +101,7 @@ namespace RipCheck
             // {
             //     if (proGuitarTracks.ContainsKey(name))
             //     {
-            //         proGuitarTracks[name].CheckSomething();
+            //         warnings.AddRange(proGuitarTracks[name].RunChecks());
             //     }
             // }
             
@@ -114,7 +109,7 @@ namespace RipCheck
             // {
             //     if (proKeysTracks.ContainsKey(name))
             //     {
-            //         proKeysTracks[name].CheckSomething();
+            //         warnings.AddRange(proKeysTracks[name].RunChecks());
             //     }
             // }
 

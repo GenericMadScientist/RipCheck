@@ -1,4 +1,4 @@
-using Melanchall.DryWetMidi.Core;
+﻿using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
@@ -41,6 +41,16 @@ namespace RipCheck
                 GuitarFretColour colour = (GuitarFretColour)(key % 12);
                 notes[difficulty].Add(new GuitarNote(colour, note.Time, note.Length));
             }
+        }
+
+        public Warnings RunChecks()
+        {
+            trackWarnings.AddRange(CheckChordSnapping());
+            if (name != "PART KEYS")
+            {
+                trackWarnings.AddRange(CheckDisjointChords());
+            }
+            return trackWarnings;
         }
 
         public Warnings CheckChordSnapping()
