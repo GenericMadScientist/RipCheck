@@ -1,11 +1,13 @@
-using Melanchall.DryWetMidi.Core;
+﻿using Melanchall.DryWetMidi.Core;
 using System.Collections.Generic;
+using Melanchall.DryWetMidi.Interaction;
 
 namespace RipCheck
 {
     public class CHSong
     {
         private readonly int resolution = -1;
+        private readonly TempoMap tempoMap;
         private readonly Dictionary<string, GuitarTrack> guitarTracks = new();
         // private readonly DrumTrack drumTrack = new();
         // private readonly Dictionary<string, VocalsTrack> vocalsTracks = new();
@@ -19,6 +21,8 @@ namespace RipCheck
             {
                 resolution = timeDivision.TicksPerQuarterNote;
             }
+
+            tempoMap = midi.GetTempoMap();
 
             foreach (TrackChunk track in midi.GetTrackChunks())
             {
@@ -83,7 +87,7 @@ namespace RipCheck
             {
                 if (guitarTracks.ContainsKey(name))
                 {
-                    warnings.AddRange(guitarTracks[name].RunChecks());
+                    warnings.AddRange(guitarTracks[name].RunChecks(tempoMap));
                 }
             }
 
