@@ -1,4 +1,4 @@
-using Melanchall.DryWetMidi.Core;
+﻿using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
@@ -75,10 +75,11 @@ namespace RipCheck
                     if (gap > 0 && gap < 10)
                     {
                         var time = (MetricTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.Metric, tempoMap);
+                        var ticks = (BarBeatTicksTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.BarBeatTicks, tempoMap);
                         int minutes = 60 * time.Hours + time.Minutes;
                         int seconds = time.Seconds;
                         int millisecs = time.Milliseconds;
-                        warnings.Add($"Chord snapping: {name} {difficulty} at {minutes}:{seconds:d2}.{millisecs:d3}");
+                        warnings.Add($"Chord snapping: {name} {difficulty} at {minutes}:{seconds:d2}.{millisecs:d3} (MBT: {ticks.Bars}.{ticks.Beats}.{ticks.Ticks})");
                     }
                 }
             }
@@ -110,10 +111,11 @@ namespace RipCheck
                         continue;
                     }
                     var lateTime = (MetricTimeSpan) TimeConverter.ConvertTo(latePos, TimeSpanType.Metric, tempoMap);
+                    var ticks = (BarBeatTicksTimeSpan) TimeConverter.ConvertTo(latePos, TimeSpanType.BarBeatTicks, tempoMap);
                     int minutes = 60 * lateTime.Hours + lateTime.Minutes;
                     int seconds = lateTime.Seconds;
                     int millisecs = lateTime.Milliseconds;
-                    warnings.Add($"Disjoint chord: {name} {difficulty} at {minutes}:{seconds:d2}.{millisecs:d3}");
+                    warnings.Add($"Disjoint chord: {name} {difficulty} at {minutes}:{seconds:d2}.{millisecs:d3} (MBT: {ticks.Bars}.{ticks.Beats}.{ticks.Ticks}");
                 }
             }
 
