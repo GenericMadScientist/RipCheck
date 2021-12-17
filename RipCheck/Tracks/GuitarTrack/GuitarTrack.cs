@@ -43,17 +43,17 @@ namespace RipCheck
             }
         }
 
-        public Warnings RunChecks()
+        public Warnings RunChecks(TempoMap tempoMap)
         {
-            trackWarnings.AddRange(CheckChordSnapping());
+            trackWarnings.AddRange(CheckChordSnapping(tempoMap));
             if (name != "PART KEYS")
             {
-                trackWarnings.AddRange(CheckDisjointChords());
+                trackWarnings.AddRange(CheckDisjointChords(tempoMap));
             }
             return trackWarnings;
         }
 
-        public Warnings CheckChordSnapping()
+        public Warnings CheckChordSnapping(TempoMap tempoMap)
         {
             var warnings = new Warnings();
 
@@ -66,7 +66,11 @@ namespace RipCheck
                 {
                     if (gap > 0 && gap < 10)
                     {
-                        warnings.Add($"Chord snapping: {name} {difficulty} at {position}");
+                        var time = (MetricTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.Metric, tempoMap);
+                        int minutes = 60 * time.Hours + time.Minutes;
+                        int seconds = time.Seconds;
+                        int millisecs = time.Milliseconds;
+                        warnings.Add($"Chord snapping: {name} {difficulty} at {minutes}:{seconds:d2}.{millisecs:d3}");
                     }
                 }
             }
@@ -74,7 +78,7 @@ namespace RipCheck
             return warnings;
         }
 
-        public Warnings CheckDisjointChords()
+        public Warnings CheckDisjointChords(TempoMap tempoMap)
         {
             var warnings = new Warnings();
 
@@ -97,7 +101,11 @@ namespace RipCheck
                     {
                         continue;
                     }
-                    warnings.Add($"Disjoint chord: {name} {difficulty} at {latePos}");
+                    var lateTime = (MetricTimeSpan) TimeConverter.ConvertTo(latePos, TimeSpanType.Metric, tempoMap);
+                    int minutes = 60 * lateTime.Hours + lateTime.Minutes;
+                    int seconds = lateTime.Seconds;
+                    int millisecs = lateTime.Milliseconds;
+                    warnings.Add($"Disjoint chord: {name} {difficulty} at {minutes}:{seconds:d2}.{millisecs:d3}");
                 }
             }
 
