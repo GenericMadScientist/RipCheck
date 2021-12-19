@@ -28,6 +28,7 @@ namespace RipCheck
             {
                 byte key = note.NoteNumber;
                 byte velocity = note.Velocity;
+                byte channel = note.Channel;
 
                 if (parameters.UnknownNotes)
                 {
@@ -49,6 +50,11 @@ namespace RipCheck
                     {
                         trackWarnings.AddTimed($"Invalid fret number: note {key} with velocity {velocity} on {name}", note.Time, tempoMap);
                         continue;
+                    }
+
+                    if (!Enum.IsDefined(typeof(ProGuitarTrackChannel), channel))
+                    {
+                        trackWarnings.AddTimed($"Unknown channel number: note {key} with channel {channel} on {name}", note.Time, tempoMap);
                     }
                 }
 
