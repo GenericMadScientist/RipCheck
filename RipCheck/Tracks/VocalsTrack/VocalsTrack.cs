@@ -48,13 +48,7 @@ namespace RipCheck
 
                 if (!Enum.IsDefined(typeof(VocalsTrackNotes), key))
                 {
-                    var position = note.Time;
-                    var time = (MetricTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.Metric, tempoMap);
-                    var ticks = (BarBeatTicksTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.BarBeatTicks, tempoMap);
-                    int minutes = 60 * time.Hours + time.Minutes;
-                    int seconds = time.Seconds;
-                    int millisecs = time.Milliseconds;
-                    trackWarnings.Add($"Unknown note: {key} on {name} at {minutes}:{seconds:d2}.{millisecs:d3} (MBT: {ticks.Bars}.{ticks.Beats}.{ticks.Ticks})");
+                    trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
                     continue;
                 }
 
@@ -101,12 +95,7 @@ namespace RipCheck
                 foreach (long lyricTime in lyrics.Keys)
                 {
                     string text = lyrics[lyricTime];
-                    var time = (MetricTimeSpan) TimeConverter.ConvertTo(lyricTime, TimeSpanType.Metric, tempoMap);
-                    var ticks = (BarBeatTicksTimeSpan) TimeConverter.ConvertTo(lyricTime, TimeSpanType.BarBeatTicks, tempoMap);
-                    int minutes = 60 * time.Hours + time.Minutes;
-                    int seconds = time.Seconds;
-                    int millisecs = time.Milliseconds;
-                    trackWarnings.Add($"Lyric not aligned to a note: {text} on {name} at {minutes}:{seconds:d2}.{millisecs:d3} (MBT: {ticks.Bars}.{ticks.Beats}.{ticks.Ticks})");
+                    trackWarnings.AddTimed($"Lyric not aligned to a note: \"{text}\", {name}", lyricTime, tempoMap);
                 }
             }
 
@@ -120,13 +109,7 @@ namespace RipCheck
                         continue;
                     }
 
-                    var position = note.Position;
-                    var time = (MetricTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.Metric, tempoMap);
-                    var ticks = (BarBeatTicksTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.BarBeatTicks, tempoMap);
-                    int minutes = 60 * time.Hours + time.Minutes;
-                    int seconds = time.Seconds;
-                    int millisecs = time.Milliseconds;
-                    trackWarnings.Add($"Note without a lyric: {note.Note} on {name} at {minutes}:{seconds:d2}.{millisecs:d3} (MBT: {ticks.Bars}.{ticks.Beats}.{ticks.Ticks})");
+                    trackWarnings.AddTimed($"Note without a lyric: {note.Note} on {name}", note.Position, tempoMap);
                 }
             }
 
@@ -160,13 +143,7 @@ namespace RipCheck
                 }
                 if (!inPhrase)
                 {
-                    var position = note.Position;
-                    var time = (MetricTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.Metric, tempoMap);
-                    var ticks = (BarBeatTicksTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.BarBeatTicks, tempoMap);
-                    int minutes = 60 * time.Hours + time.Minutes;
-                    int seconds = time.Seconds;
-                    int millisecs = time.Milliseconds;
-                    trackWarnings.Add($"Note outside of a phrase: {note.Note} on {name} at {minutes}:{seconds:d2}.{millisecs:d3} (MBT: {ticks.Bars}.{ticks.Beats}.{ticks.Ticks})");
+                    trackWarnings.AddTimed($"Note outside of a phrase: {note.Note}, {name}", note.Position, tempoMap);
                 }
             }
 

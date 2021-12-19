@@ -30,13 +30,7 @@ namespace RipCheck
 
                 if (!Enum.IsDefined(typeof(GuitarTrackNote), key))
                 {
-                    var position = note.Time;
-                    var time = (MetricTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.Metric, tempoMap);
-                    var ticks = (BarBeatTicksTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.BarBeatTicks, tempoMap);
-                    int minutes = 60 * time.Hours + time.Minutes;
-                    int seconds = time.Seconds;
-                    int millisecs = time.Milliseconds;
-                    trackWarnings.Add($"Unknown note: {key} on {name} at {minutes}:{seconds:d2}.{millisecs:d3} (MBT: {ticks.Bars}.{ticks.Beats}.{ticks.Ticks})");
+                    trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
                     continue;
                 }
 
@@ -74,12 +68,7 @@ namespace RipCheck
                 {
                     if (gap > 0 && gap < 10)
                     {
-                        var time = (MetricTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.Metric, tempoMap);
-                        var ticks = (BarBeatTicksTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.BarBeatTicks, tempoMap);
-                        int minutes = 60 * time.Hours + time.Minutes;
-                        int seconds = time.Seconds;
-                        int millisecs = time.Milliseconds;
-                        warnings.Add($"Chord snapping: {name} {difficulty} at {minutes}:{seconds:d2}.{millisecs:d3} (MBT: {ticks.Bars}.{ticks.Beats}.{ticks.Ticks})");
+                        trackWarnings.AddTimed($"Chord snapping: {difficulty} on {name}", position, tempoMap);
                     }
                 }
             }
@@ -110,12 +99,7 @@ namespace RipCheck
                     {
                         continue;
                     }
-                    var lateTime = (MetricTimeSpan) TimeConverter.ConvertTo(latePos, TimeSpanType.Metric, tempoMap);
-                    var ticks = (BarBeatTicksTimeSpan) TimeConverter.ConvertTo(latePos, TimeSpanType.BarBeatTicks, tempoMap);
-                    int minutes = 60 * lateTime.Hours + lateTime.Minutes;
-                    int seconds = lateTime.Seconds;
-                    int millisecs = lateTime.Milliseconds;
-                    warnings.Add($"Disjoint chord: {name} {difficulty} at {minutes}:{seconds:d2}.{millisecs:d3} (MBT: {ticks.Bars}.{ticks.Beats}.{ticks.Ticks})");
+                    trackWarnings.AddTimed($"Disjoint chord: {difficulty} on {name}", latePos, tempoMap);
                 }
             }
 
