@@ -59,7 +59,11 @@ namespace RipCheck
 
                 if (key < 36 || key > 84)
                 {
-                    continue;
+                    // Include the percussion notes
+                    if (!(key == 96 || key == 97))
+                    {
+                        continue;
+                    }
                 }
 
                 var noteTime = note.Time;
@@ -104,6 +108,12 @@ namespace RipCheck
             {
                 if (note.Text == String.Empty)
                 {
+                    // Exclude percussion notes
+                    if (note.Note == 96 || note.Note == 97)
+                    {
+                        continue;
+                    }
+
                     var position = note.Position;
                     var time = (MetricTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.Metric, tempoMap);
                     var ticks = (BarBeatTicksTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.BarBeatTicks, tempoMap);
