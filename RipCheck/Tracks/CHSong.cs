@@ -1,4 +1,4 @@
-﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Core;
 using System.Collections.Generic;
 using Melanchall.DryWetMidi.Interaction;
 
@@ -33,7 +33,7 @@ namespace RipCheck
                     case "PART BASS":
                     case "PART KEYS":
                     //case "T1 GEMS":
-                        guitarTracks.Add(name, new GuitarTrack(track, name));
+                        guitarTracks.Add(name, new GuitarTrack(track, tempoMap, name));
                         break;
                     //case "PART DRUMS":
                         // drumTrack = new DrumTrack(track, name));
