@@ -10,7 +10,7 @@ namespace RipCheck
         [Option('n', "notesonly", Required = false, HelpText = "Only scan files called \"notes.mid\".")]
         public bool NotesOnly { get; set; }
 
-        [Option('u', "unknownnotes", Required = false, HelpText = "Check for unrecognized notes and Pro Guitar fret numbers.")]
+        [Option('u', "unknownnotes", Required = false, HelpText = "Check for unrecognized notes and Pro Guitar fret numbers/channels.")]
         public bool UnknownNotes { get; set; }
 
         [Option('d', "nodisjoint", Required = false, HelpText = "Don't check for disjoint chords.")]
