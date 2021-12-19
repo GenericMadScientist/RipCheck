@@ -1,4 +1,4 @@
-using Melanchall.DryWetMidi.Core;
+﻿using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ namespace RipCheck
     {
         private readonly List<VocalsNote> notes = new();
         private readonly Dictionary<long, string> lyrics = new();
+        public readonly List<(long, long)> phrases = new();
         private readonly TempoMap tempoMap;
         private readonly string name;
 
@@ -57,6 +58,12 @@ namespace RipCheck
                     continue;
                 }
 
+                if (key == (byte)VocalsTrackNotes.LyricsPhrase1 || key == (byte)VocalsTrackNotes.LyricsPhrase2)
+                {
+                    phrases.Add((note.Time, note.Time + note.Length));
+                    continue;
+                }
+
                 if (key < 36 || key > 84)
                 {
                     // Include the percussion notes
@@ -78,11 +85,10 @@ namespace RipCheck
             }
         }
 
-        public Warnings RunChecks()
+        public Warnings RunChecks(List<(long, long)> extPhrases = null)
         {
-            // TODO:
-            // Check that that every note is within a phrase
             trackWarnings.AddRange(MatchNoteLyrics());
+            trackWarnings.AddRange(CheckPhrases(extPhrases));
             return trackWarnings;
         }
 
@@ -121,6 +127,46 @@ namespace RipCheck
                     int seconds = time.Seconds;
                     int millisecs = time.Milliseconds;
                     trackWarnings.Add($"Note without a lyric: {note.Note} on {name} at {minutes}:{seconds:d2}.{millisecs:d3} (MBT: {ticks.Bars}.{ticks.Beats}.{ticks.Ticks})");
+                }
+            }
+
+            return warnings;
+        }
+
+        public Warnings CheckPhrases(List<(long, long)> extPhrases = null)
+        {
+            var warnings = new Warnings();
+
+            if (extPhrases == null)
+            {
+                // Use the track's own phrases instead
+                extPhrases = phrases;
+            }
+
+            foreach (VocalsNote note in notes)
+            {
+                var noteStart = note.Position;
+                var noteEnd = note.Position + note.Length;
+                bool inPhrase = false;
+                foreach ((long, long) times in extPhrases)
+                {
+                    var phraseStart = times.Item1;
+                    var phraseEnd = times.Item2;
+                    if (noteStart >= times.Item1 && noteStart <= times.Item2 && noteEnd <= times.Item2)
+                    {
+                        inPhrase = true;
+                        break;
+                    }
+                }
+                if (!inPhrase)
+                {
+                    var position = note.Position;
+                    var time = (MetricTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.Metric, tempoMap);
+                    var ticks = (BarBeatTicksTimeSpan) TimeConverter.ConvertTo(position, TimeSpanType.BarBeatTicks, tempoMap);
+                    int minutes = 60 * time.Hours + time.Minutes;
+                    int seconds = time.Seconds;
+                    int millisecs = time.Milliseconds;
+                    trackWarnings.Add($"Note outside of a phrase: {note.Note} on {name} at {minutes}:{seconds:d2}.{millisecs:d3} (MBT: {ticks.Bars}.{ticks.Beats}.{ticks.Ticks})");
                 }
             }
 
