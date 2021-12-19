@@ -9,7 +9,7 @@ namespace RipCheck
     class VocalsTrack
     {
         private readonly List<VocalsNote> notes = new();
-        private readonly Dictionary<long, TextEvent> lyrics = new();
+        private readonly Dictionary<long, string> lyrics = new();
         private readonly TempoMap tempoMap;
         private readonly string name;
 
@@ -24,14 +24,20 @@ namespace RipCheck
             foreach (MidiEvent midiEvent in track.Events)
             {
                 absoluteTime += midiEvent.DeltaTime;
+                string text = String.Empty;
 
                 if (midiEvent.EventType == MidiEventType.Text)
                 {
-                    TextEvent textEvent = midiEvent as TextEvent;
-                    if (!textEvent.Text.StartsWith("["))
-                    {
-                        lyrics.Add(absoluteTime, (midiEvent as TextEvent));
-                    }
+                    text = (midiEvent as TextEvent).Text;
+                }
+                if (midiEvent.EventType == MidiEventType.Lyric)
+                {
+                    text = (midiEvent as LyricEvent).Text;
+                }
+
+                if (!String.IsNullOrEmpty(text) && !text.StartsWith("["))
+                {
+                    lyrics.Add(absoluteTime, text);
                 }
             }
 
@@ -60,7 +66,7 @@ namespace RipCheck
                 string text = String.Empty;
                 if (lyrics.ContainsKey(noteTime))
                 {
-                    text = lyrics[noteTime].Text;
+                    text = lyrics[noteTime];
                     lyrics.Remove(noteTime);
                 }
 
@@ -84,7 +90,7 @@ namespace RipCheck
             {
                 foreach (long lyricTime in lyrics.Keys)
                 {
-                    string text = lyrics[lyricTime].Text;
+                    string text = lyrics[lyricTime];
                     var time = (MetricTimeSpan) TimeConverter.ConvertTo(lyricTime, TimeSpanType.Metric, tempoMap);
                     var ticks = (BarBeatTicksTimeSpan) TimeConverter.ConvertTo(lyricTime, TimeSpanType.BarBeatTicks, tempoMap);
                     int minutes = 60 * time.Hours + time.Minutes;
