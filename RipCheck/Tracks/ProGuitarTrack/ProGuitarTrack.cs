@@ -14,7 +14,7 @@ namespace RipCheck
 
         private Warnings trackWarnings = new Warnings();
 
-        public ProGuitarTrack(TrackChunk track, TempoMap _tempoMap, string instrument)
+        public ProGuitarTrack(TrackChunk track, TempoMap _tempoMap, string instrument, Options parameters)
         {
             name = instrument;
             tempoMap = _tempoMap;
@@ -29,10 +29,13 @@ namespace RipCheck
                 byte key = note.NoteNumber;
                 byte velocity = note.Velocity;
 
-                if (!Enum.IsDefined(typeof(ProGuitarTrackNote), key))
+                if (parameters.UnknownNotes)
                 {
-                    trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
-                    continue;
+                    if (!Enum.IsDefined(typeof(ProGuitarTrackNote), key))
+                    {
+                        trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
+                        continue;
+                    }
                 }
 
                 if (key < 24 || key > 101 || (key % 12) > 5)
@@ -40,10 +43,13 @@ namespace RipCheck
                     continue;
                 }
 
-                if (velocity < 100 || velocity > 122)
+                if (parameters.UnknownNotes)
                 {
-                    trackWarnings.AddTimed($"Invalid fret number: note {key} with velocity {velocity} on {name}", note.Time, tempoMap);
-                    continue;
+                    if (velocity < 100 || velocity > 122)
+                    {
+                        trackWarnings.AddTimed($"Invalid fret number: note {key} with velocity {velocity} on {name}", note.Time, tempoMap);
+                        continue;
+                    }
                 }
 
                 Difficulty difficulty = (Difficulty)((key - 24) / 24);
@@ -53,10 +59,16 @@ namespace RipCheck
             }
         }
 
-        public Warnings RunChecks()
+        public Warnings RunChecks(Options parameters)
         {
-            trackWarnings.AddRange(CheckChordSnapping());
-            trackWarnings.AddRange(CheckDisjointChords());
+            if (!parameters.NoChordSnapping)
+            {
+                trackWarnings.AddRange(CheckChordSnapping());
+            }
+            if (!parameters.NoDisjoints)
+            {
+                trackWarnings.AddRange(CheckDisjointChords());
+            }
             return trackWarnings;
         }
 

@@ -1,29 +1,46 @@
-using CommandLine;
+﻿using CommandLine;
 using Melanchall.DryWetMidi.Core;
 using System;
 using System.IO;
 
 namespace RipCheck
 {
+    public class Options
+    {
+        [Option('n', "notesonly", Required = false, HelpText = "Only scan files called \"notes.mid\".")]
+        public bool NotesOnly { get; set; }
+
+        [Option('u', "unknownnotes", Required = false, HelpText = "Check for unrecognized notes and Pro Guitar fret numbers.")]
+        public bool UnknownNotes { get; set; }
+
+        [Option('d', "nodisjoint", Required = false, HelpText = "Don't check for disjoint chords.")]
+        public bool NoDisjoints { get; set; }
+
+        [Option('s', "nochordsnapping", Required = false, HelpText = "Don't check for chord snapping issues.")]
+        public bool NoChordSnapping { get; set; }
+
+        [Option('l', "nolyricalignment", Required = false, HelpText = "Don't check for lyric alignment issues.")]
+        public bool NoLyricAlignment { get; set; }
+
+        [Option('p', "nolyricphrasechecks", Required = false, HelpText = "Don't check for vocals notes outside of phrases.")]
+        public bool NoLyricPhraseChecks { get; set; }
+
+        [Value(0, HelpText = "Directory to check the charts of.")]
+        public string Directory { get; set; }
+    }
+
     class Program
     {
-        public class Options
-        {
-            [Option(Required = false, HelpText = "Only scan files called notes.mid.")]
-            public bool NotesOnly { get; set; }
-
-            [Value(0, HelpText = "Directory containing the .mid files.")]
-            public string Directory { get; set; }
-        }
-
         static void Main(string[] args)
         {
+            Options parameters = new();
             bool notesOnly = false;
             string directory = "";
             bool earlyReturn = false;
             Parser.Default.ParseArguments<Options>(args)
                 .WithParsed(o =>
                 {
+                    parameters = o;
                     notesOnly = o.NotesOnly;
                     directory = o.Directory;
                     if (directory is null)
@@ -45,24 +62,24 @@ namespace RipCheck
             var di = new DirectoryInfo(directory);
             if (!di.Exists)
             {
-                Console.WriteLine($"Directory {args[0]} does not exist");
+                Console.WriteLine($"Directory {directory} does not exist");
                 return;
             }
 
-            var options = new EnumerationOptions
+            var fileOptions = new EnumerationOptions
             {
                 RecurseSubdirectories = true,
                 ReturnSpecialDirectories = false
             };
             string search = notesOnly ? "notes.mid" : "*.mid";
-            FileInfo[] files = di.GetFiles(search, options);
+            FileInfo[] files = di.GetFiles(search, fileOptions);
             foreach (FileInfo midi in files)
             {
-                CheckMid(midi.FullName);
+                CheckMid(midi.FullName, parameters);
             }
         }
 
-        private static void CheckMid(string midiPath)
+        private static void CheckMid(string midiPath, Options parameters)
         {
             var settings = new ReadingSettings
             {
@@ -82,8 +99,8 @@ namespace RipCheck
                 return;
             }
 
-            var song = new CHSong(midiFile);
-            Warnings warnings = song.RunChecks();
+            var song = new CHSong(midiFile, parameters);
+            Warnings warnings = song.RunChecks(parameters);
             if (!warnings.IsEmpty())
             {
                 Console.WriteLine($"File {midiPath} has problems");

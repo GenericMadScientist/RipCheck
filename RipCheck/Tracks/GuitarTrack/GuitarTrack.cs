@@ -14,7 +14,7 @@ namespace RipCheck
 
         private Warnings trackWarnings = new Warnings();
 
-        public GuitarTrack(TrackChunk track, TempoMap _tempoMap, string instrument)
+        public GuitarTrack(TrackChunk track, TempoMap _tempoMap, string instrument, Options parameters)
         {
             name = instrument;
             tempoMap = _tempoMap;
@@ -28,10 +28,13 @@ namespace RipCheck
             {
                 byte key = note.NoteNumber;
 
-                if (!Enum.IsDefined(typeof(GuitarTrackNote), key))
+                if (parameters.UnknownNotes)
                 {
-                    trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
-                    continue;
+                    if (!Enum.IsDefined(typeof(GuitarTrackNote), key))
+                    {
+                        trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
+                        continue;
+                    }
                 }
 
                 if (key < 60 || key > 100 || (key % 12) > 4)
@@ -45,13 +48,20 @@ namespace RipCheck
             }
         }
 
-        public Warnings RunChecks()
+        public Warnings RunChecks(Options parameters)
         {
-            trackWarnings.AddRange(CheckChordSnapping());
-            if (name != "PART KEYS")
+            if (!parameters.NoChordSnapping)
             {
-                trackWarnings.AddRange(CheckDisjointChords());
+                trackWarnings.AddRange(CheckChordSnapping());
             }
+            if (!parameters.NoDisjoints)
+            {
+                if (name != "PART KEYS")
+                {
+                    trackWarnings.AddRange(CheckDisjointChords());
+                }
+            }
+
             return trackWarnings;
         }
 

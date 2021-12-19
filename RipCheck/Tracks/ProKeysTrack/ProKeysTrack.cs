@@ -15,7 +15,7 @@ namespace RipCheck
 
         private Warnings trackWarnings = new Warnings();
 
-        public ProKeysTrack(TrackChunk track, TempoMap _tempoMap, string instrument)
+        public ProKeysTrack(TrackChunk track, TempoMap _tempoMap, string instrument, Options parameters)
         {
             name = instrument;
             tempoMap = _tempoMap;
@@ -39,10 +39,13 @@ namespace RipCheck
             {
                 byte key = note.NoteNumber;
 
-                if (!Enum.IsDefined(typeof(ProKeysTrackNotes), key))
+                if (parameters.UnknownNotes)
                 {
-                    trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
-                    continue;
+                    if (!Enum.IsDefined(typeof(ProKeysTrackNotes), key))
+                    {
+                        trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
+                        continue;
+                    }
                 }
 
                 if (key < 48 || key > 72)
@@ -54,9 +57,12 @@ namespace RipCheck
             }
         }
 
-        public Warnings RunChecks()
+        public Warnings RunChecks(Options parameters)
         {
-            trackWarnings.AddRange(CheckChordSnapping());
+            if (!parameters.NoChordSnapping)
+            {
+                trackWarnings.AddRange(CheckChordSnapping());
+            }
             return trackWarnings;
         }
 

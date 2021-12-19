@@ -16,7 +16,7 @@ namespace RipCheck
 
         private Warnings trackWarnings = new Warnings();
 
-        public VocalsTrack(TrackChunk track, TempoMap _tempoMap, string instrument)
+        public VocalsTrack(TrackChunk track, TempoMap _tempoMap, string instrument, Options parameters)
         {
             name = instrument;
             tempoMap = _tempoMap;
@@ -46,10 +46,13 @@ namespace RipCheck
             {
                 byte key = note.NoteNumber;
 
-                if (!Enum.IsDefined(typeof(VocalsTrackNotes), key))
+                if (parameters.UnknownNotes)
                 {
-                    trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
-                    continue;
+                    if (!Enum.IsDefined(typeof(VocalsTrackNotes), key))
+                    {
+                        trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
+                        continue;
+                    }
                 }
 
                 if (key == (byte)VocalsTrackNotes.LyricsPhrase1 || key == (byte)VocalsTrackNotes.LyricsPhrase2)
@@ -79,10 +82,16 @@ namespace RipCheck
             }
         }
 
-        public Warnings RunChecks(List<(long, long)> extPhrases = null)
+        public Warnings RunChecks(Options parameters, List<(long, long)> extPhrases = null)
         {
-            trackWarnings.AddRange(MatchNoteLyrics());
-            trackWarnings.AddRange(CheckPhrases(extPhrases));
+            if (parameters.NoLyricAlignment)
+            {
+                trackWarnings.AddRange(MatchNoteLyrics());
+            }
+            if (parameters.NoLyricPhraseChecks)
+            {
+                trackWarnings.AddRange(CheckPhrases(extPhrases));
+            }
             return trackWarnings;
         }
 
