@@ -1,4 +1,4 @@
-﻿using CommandLine;
+using CommandLine;
 using Melanchall.DryWetMidi.Core;
 using System;
 using System.IO;
@@ -88,6 +88,7 @@ namespace RipCheck
             {
                 Console.WriteLine($"File {midiPath} has problems");
                 warnings.PrintWarnings();
+                Console.WriteLine(); // Put a line break between each file's warnings
             }
         }
     }
