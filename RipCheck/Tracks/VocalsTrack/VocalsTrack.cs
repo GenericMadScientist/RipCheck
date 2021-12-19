@@ -1,4 +1,4 @@
-﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
@@ -38,7 +38,14 @@ namespace RipCheck
 
                 if (!String.IsNullOrEmpty(text) && !text.StartsWith("["))
                 {
-                    lyrics.Add(absoluteTime, text);
+                    try
+                    {
+                        lyrics.Add(absoluteTime, text);
+                    }
+                    catch (ArgumentException)
+                    {
+                        trackWarnings.AddTimed($"Lyric at the same time as another: {text} on {name}", absoluteTime, tempoMap);
+                    }
                 }
             }
 
