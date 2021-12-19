@@ -41,7 +41,7 @@ namespace RipCheck
 
         MediumGHFaceOff2 = 82,
         MediumGHFaceOff1 = 81,
-        MediumGHStarPower = 89,
+        MediumGHStarPower = 79,
         MediumForceStrum = 78,
         MediumForceHOPO = 77,
         MediumOrange = 76,
