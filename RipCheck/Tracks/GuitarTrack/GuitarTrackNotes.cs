@@ -3,6 +3,7 @@ namespace RipCheck
     enum GuitarTrackNote : byte
     {
         // Does not include CH's tap note marker or note-based open notes
+        // Inverse order for easier referencing of charts in a piano-roll view
         TrillLane = 127,
         StrumLane = 126,
         BRE1 = 124,
@@ -27,6 +28,7 @@ namespace RipCheck
         ExpertYellow = 98,
         ExpertRed = 97,
         ExpertGreen = 96,
+        // Unknown95 = 95,
 
         HardGHFaceOff2 = 94,
         HardGHFaceOff1 = 93,
@@ -81,5 +83,16 @@ namespace RipCheck
         LeftHand3 = 42,
         LeftHand2 = 41,
         LeftHand1 = 40,
+        // LeftHandUnknown39 = 39,
+        // LeftHandUnknown38 = 38,
+
+        // Unknown35 = 35,
+        // Unknown32 = 32,
+        // Unknown29 = 29,
+        // Unknown27 = 27,
+        // Unknown15 = 15,
+        // Unknown14 = 14,
+        // Unknown13 = 13,
+        // Unknown12 = 12
     }
 }
