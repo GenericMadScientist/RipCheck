@@ -2,6 +2,7 @@ namespace RipCheck
 {
     enum ProGuitarTrackNote : byte
     {
+        // Inverse order for easier referencing of charts in a piano-roll view
         TrillLane = 127,
         StrumLane = 126,
         BRE1 = 125,
@@ -15,7 +16,6 @@ namespace RipCheck
         PlayerHandPosition = 108,
         ForceChordNumbering = 107,
 
-        // ExpertUnknown106 = 106,
         ExpertStringEmphasis = 105,
         ExpertArpeggio = 104,
         ExpertSlide = 103,
@@ -27,9 +27,6 @@ namespace RipCheck
         ExpertGreen = 97,
         ExpertRed = 96,
 
-        // Unknown93 = 93,
-
-        // HardUnknown82 = 82,
         HardStringEmphasis = 81,
         HardArpeggio = 80,
         HardSlide = 79,
@@ -41,7 +38,6 @@ namespace RipCheck
         HardGreen = 73,
         HardRed = 72,
 
-        // MediumUnknown58 = 58,
         MediumStringEmphasis = 57,
         MediumArpeggio = 56,
         MediumSlide = 55,
@@ -53,7 +49,6 @@ namespace RipCheck
         MediumGreen = 49,
         MediumRed = 48,
 
-        // EasyUnknown34 = 34,
         EasyStringEmphasis = 33,
         EasyArpeggio = 32,
         EasySlide = 31,

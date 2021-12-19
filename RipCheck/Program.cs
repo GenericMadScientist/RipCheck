@@ -1,4 +1,4 @@
-﻿using CommandLine;
+using CommandLine;
 using Melanchall.DryWetMidi.Core;
 using System;
 using System.IO;
@@ -75,6 +75,7 @@ namespace RipCheck
             FileInfo[] files = di.GetFiles(search, fileOptions);
             foreach (FileInfo midi in files)
             {
+                Debug.WriteLine($"Checking {midi.FullName}");
                 CheckMid(midi.FullName, parameters);
             }
         }

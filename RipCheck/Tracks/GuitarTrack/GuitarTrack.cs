@@ -11,8 +11,9 @@ namespace RipCheck
         private readonly Dictionary<Difficulty, IList<GuitarNote>> notes = new();
         private readonly TempoMap tempoMap;
         private readonly string name;
+        public string Name { get { return name; } }
 
-        private Warnings trackWarnings = new Warnings();
+        private readonly Warnings trackWarnings = new Warnings();
 
         public GuitarTrack(TrackChunk track, TempoMap _tempoMap, string instrument, Options parameters)
         {

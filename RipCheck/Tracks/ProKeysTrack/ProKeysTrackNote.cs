@@ -1,7 +1,8 @@
 namespace RipCheck
 {
-    enum ProKeysTrackNotes : byte
+    enum ProKeysTrackNote : byte
     {
+        // Inverse order for easier referencing of charts in a piano-roll view
         TrillLane = 127,
         Glissando = 126,
         BRE = 120,

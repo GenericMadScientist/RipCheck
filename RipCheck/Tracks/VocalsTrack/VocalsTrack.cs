@@ -1,4 +1,4 @@
-using Melanchall.DryWetMidi.Core;
+﻿using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
@@ -10,11 +10,13 @@ namespace RipCheck
     {
         private readonly List<VocalsNote> notes = new();
         private readonly Dictionary<long, string> lyrics = new();
-        public readonly List<(long, long)> phrases = new();
+        private readonly List<(long, long)> phrases = new();
+        public List<(long, long)> Phrases { get { return phrases; } }
         private readonly TempoMap tempoMap;
         private readonly string name;
+        public string Name { get { return name; } }
 
-        private Warnings trackWarnings = new Warnings();
+        private readonly Warnings trackWarnings = new Warnings();
 
         public VocalsTrack(TrackChunk track, TempoMap _tempoMap, string instrument, Options parameters)
         {
@@ -31,7 +33,7 @@ namespace RipCheck
                 {
                     text = (midiEvent as TextEvent).Text;
                 }
-                if (midiEvent.EventType == MidiEventType.Lyric)
+                else if (midiEvent.EventType == MidiEventType.Lyric)
                 {
                     text = (midiEvent as LyricEvent).Text;
                 }
@@ -55,14 +57,14 @@ namespace RipCheck
 
                 if (parameters.UnknownNotes)
                 {
-                    if (!Enum.IsDefined(typeof(VocalsTrackNotes), key))
+                    if (!Enum.IsDefined(typeof(VocalsTrackNote), key))
                     {
                         trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
                         continue;
                     }
                 }
 
-                if (key == (byte)VocalsTrackNotes.LyricsPhrase1 || key == (byte)VocalsTrackNotes.LyricsPhrase2)
+                if (key == (byte)VocalsTrackNote.LyricsPhrase1 || key == (byte)VocalsTrackNote.LyricsPhrase2)
                 {
                     phrases.Add((note.Time, note.Time + note.Length));
                     continue;

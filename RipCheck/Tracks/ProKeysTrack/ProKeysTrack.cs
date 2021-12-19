@@ -11,9 +11,10 @@ namespace RipCheck
         private readonly List<ProKeysNote> notes = new();
         private readonly TempoMap tempoMap;
         private readonly string name;
+        public string Name { get { return name; } }
         private readonly Difficulty difficulty;
 
-        private Warnings trackWarnings = new Warnings();
+        private readonly Warnings trackWarnings = new Warnings();
 
         public ProKeysTrack(TrackChunk track, TempoMap _tempoMap, string instrument, Options parameters)
         {
@@ -41,7 +42,7 @@ namespace RipCheck
 
                 if (parameters.UnknownNotes)
                 {
-                    if (!Enum.IsDefined(typeof(ProKeysTrackNotes), key))
+                    if (!Enum.IsDefined(typeof(ProKeysTrackNote), key))
                     {
                         trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
                         continue;
@@ -76,7 +77,7 @@ namespace RipCheck
             {
                 if (gap > 0 && gap < 10)
                 {
-                        trackWarnings.AddTimed($"Chord snapping: {difficulty} on {name}", position, tempoMap);
+                    trackWarnings.AddTimed($"Chord snapping: {difficulty} on {name}", position, tempoMap);
                 }
             }
 

@@ -11,8 +11,9 @@ namespace RipCheck
         private readonly Dictionary<Difficulty, IList<DrumsNote>> notes = new();
         private readonly TempoMap tempoMap;
         private readonly string name;
+        public string Name { get { return name; } }
 
-        private Warnings trackWarnings = new Warnings();
+        private readonly Warnings trackWarnings = new Warnings();
 
         public DrumsTrack(TrackChunk track, TempoMap _tempoMap, string instrument, Options parameters)
         {
@@ -30,7 +31,7 @@ namespace RipCheck
 
                 if (parameters.UnknownNotes)
                 {
-                    if (!Enum.IsDefined(typeof(DrumsTrackNotes), key))
+                    if (!Enum.IsDefined(typeof(DrumsTrackNote), key))
                     {
                         trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
                         continue;

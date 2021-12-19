@@ -56,17 +56,6 @@ namespace RipCheck
                     case "PART REAL_KEYS_E":
                         proKeysTracks.Add(name, new ProKeysTrack(track, tempoMap, name, parameters));
                         break;
-                    //case "PART KEYS_ANIM_LH":
-                    //case "PART KEYS_ANIM_RH":
-                    //case "EVENTS":
-                    //case "VENUE":
-                    //case "BEAT":
-                    //case "ANIM":
-                    //case "TRIGGERS":
-                    //case "BAND_DRUM":
-                    //case "BAND_BASS":
-                    //case "BAND_SINGER":
-                        // break;
                 }
             }
         }
@@ -83,16 +72,16 @@ namespace RipCheck
                 warnings.Add($"Midi has resolution {resolution}");
             }
 
-            foreach (string name in guitarTracks.Keys)
+            foreach (GuitarTrack track in guitarTracks.Values)
             {
-                warnings.AddRange(guitarTracks[name].RunChecks(parameters));
+                warnings.AddRange(track.RunChecks(parameters));
             }
 
             warnings.AddRange(drumTrack?.RunChecks(parameters));
             
-            foreach (string name in vocalsTracks.Keys)
+            foreach (VocalsTrack track in vocalsTracks.Values)
             {
-                if (name == "HARM3")
+                if (track.Name == "HARM3")
                 {
                     // HARM3 does not have phrase markers, so we have to use HARM2's phrases instead
                     if (!vocalsTracks.ContainsKey("HARM2"))
@@ -101,22 +90,22 @@ namespace RipCheck
                         continue;
                     }
 
-                    warnings.AddRange(vocalsTracks[name].RunChecks(parameters, vocalsTracks["HARM2"].phrases));
+                    warnings.AddRange(track.RunChecks(parameters, vocalsTracks["HARM2"].Phrases));
                 }
                 else
                 {
-                    warnings.AddRange(vocalsTracks[name].RunChecks(parameters));
+                    warnings.AddRange(track.RunChecks(parameters));
                 }
             }
             
-            foreach (string name in proGuitarTracks.Keys)
+            foreach (ProGuitarTrack track in proGuitarTracks.Values)
             {
-                warnings.AddRange(proGuitarTracks[name].RunChecks(parameters));
+                warnings.AddRange(track.RunChecks(parameters));
             }
             
-            foreach (string name in proKeysTracks.Keys)
+            foreach (ProKeysTrack track in proKeysTracks.Values)
             {
-                warnings.AddRange(proKeysTracks[name].RunChecks(parameters));
+                warnings.AddRange(track.RunChecks(parameters));
             }
 
             return warnings;

@@ -1,7 +1,8 @@
 namespace RipCheck
 {
-    enum VocalsTrackNotes : byte
+    enum VocalsTrackNote : byte
     {
+        // Inverse order for easier referencing of charts in a piano-roll view
         Overdrive = 116,
         LyricsPhrase2 = 106,
         LyricsPhrase1 = 105,
@@ -62,11 +63,6 @@ namespace RipCheck
         D2 = 38,
         Db2 = 37,
         C2 = 36,
-
-        // Unknown15 = 15,
-        // Unknown14 = 14,
-        // Unknown13 = 13,
-        // Unknown12 = 12
 
         LyricShift = 1,
         RangeShift = 0

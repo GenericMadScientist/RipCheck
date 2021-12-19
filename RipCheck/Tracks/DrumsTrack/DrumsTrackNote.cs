@@ -1,8 +1,9 @@
 namespace RipCheck
 {
-    enum DrumsTrackNotes : byte
+    enum DrumsTrackNote : byte
     {
         // Does not include flam markers
+        // Inverse order for easier referencing of charts in a piano-roll view
         Roll2Lane = 127,
         Roll1Lane = 126,
         BRE1 = 124,
@@ -74,14 +75,9 @@ namespace RipCheck
         SnareHardLH = 26,
         HiHatOpen = 25,
         KickRF = 24
-
-        // Unknown15 = 15,
-        // Unknown14 = 14,
-        // Unknown13 = 13,
-        // Unknown12 = 12
     }
 
-    enum DrumsTrackVelocities
+    enum DrumsTrackVelocity
     {
         Accent = 127,
         Ghost = 1
