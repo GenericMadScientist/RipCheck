@@ -9,10 +9,10 @@ namespace RipCheck
         private readonly int resolution = -1;
         private readonly TempoMap tempoMap;
         private readonly Dictionary<string, GuitarTrack> guitarTracks = new();
-        // private readonly DrumTrack drumTrack = new();
-        // private readonly Dictionary<string, VocalsTrack> vocalsTracks = new();
-        // private readonly Dictionary<string, ProGuitarTrack> proGuitarTracks = new();
-        // private readonly Dictionary<string, ProKeysTrack> proKeysTracks = new();
+        private readonly DrumsTrack drumTrack;
+        private readonly Dictionary<string, VocalsTrack> vocalsTracks = new();
+        private readonly Dictionary<string, ProGuitarTrack> proGuitarTracks = new();
+        private readonly Dictionary<string, ProKeysTrack> proKeysTracks = new();
 
         public CHSong(MidiFile midi)
         {
@@ -32,30 +32,30 @@ namespace RipCheck
                     case "PART GUITAR":
                     case "PART BASS":
                     case "PART KEYS":
-                    //case "T1 GEMS":
+                    case "T1 GEMS":
                         guitarTracks.Add(name, new GuitarTrack(track, tempoMap, name));
                         break;
-                    //case "PART DRUMS":
-                        // drumTrack = new DrumTrack(track, name));
-                        // break;
-                    //case "PART VOCALS":
-                    //case "HARM1":
-                    //case "HARM2":
-                    //case "HARM3":
-                        // vocalsTracks.Add(name, new VocalsTrack(track, name));
-                        // break;
-                    //case "PART REAL_GUITAR":
-                    //case "PART REAL_GUITAR_22":
-                    //case "PART REAL_BASS":
-                    //case "PART REAL_BASS_22":
-                        // proGuitarTracks.Add(name, new ProGuitarTrack(track, name));
-                        // break;
-                    //case "PART REAL_KEYS_X":
-                    //case "PART REAL_KEYS_H":
-                    //case "PART REAL_KEYS_M":
-                    //case "PART REAL_KEYS_E":
-                        // proKeysTracks.Add(name, new ProKeysTrack(track, name));
-                        // break;
+                    case "PART DRUMS":
+                        drumTrack = new DrumsTrack(track, tempoMap, name);
+                        break;
+                    case "PART VOCALS":
+                    case "HARM1":
+                    case "HARM2":
+                    case "HARM3":
+                        vocalsTracks.Add(name, new VocalsTrack(track, tempoMap, name));
+                        break;
+                    case "PART REAL_GUITAR":
+                    case "PART REAL_GUITAR_22":
+                    case "PART REAL_BASS":
+                    case "PART REAL_BASS_22":
+                        proGuitarTracks.Add(name, new ProGuitarTrack(track, tempoMap, name));
+                        break;
+                    case "PART REAL_KEYS_X":
+                    case "PART REAL_KEYS_H":
+                    case "PART REAL_KEYS_M":
+                    case "PART REAL_KEYS_E":
+                        proKeysTracks.Add(name, new ProKeysTrack(track, tempoMap, name));
+                        break;
                     //case "PART KEYS_ANIM_LH":
                     //case "PART KEYS_ANIM_RH":
                     //case "EVENTS":
@@ -85,37 +85,25 @@ namespace RipCheck
 
             foreach (string name in guitarTracks.Keys)
             {
-                if (guitarTracks.ContainsKey(name))
-                {
-                    warnings.AddRange(guitarTracks[name].RunChecks(tempoMap));
-                }
+                warnings.AddRange(guitarTracks[name].RunChecks());
             }
 
-            // drumTrack?.RunChecks();
+            warnings.AddRange(drumTrack?.RunChecks());
             
-            // foreach (string name in vocalsTracks.Keys)
-            // {
-            //     if (vocalsTracks.ContainsKey(name))
-            //     {
-            //         warnings.AddRange(vocalsTracks[name].RunChecks());
-            //     }
-            // }
+            foreach (string name in vocalsTracks.Keys)
+            {
+                warnings.AddRange(vocalsTracks[name].RunChecks());
+            }
             
-            // foreach (string name in proGuitarTracks.Keys)
-            // {
-            //     if (proGuitarTracks.ContainsKey(name))
-            //     {
-            //         warnings.AddRange(proGuitarTracks[name].RunChecks());
-            //     }
-            // }
+            foreach (string name in proGuitarTracks.Keys)
+            {
+                warnings.AddRange(proGuitarTracks[name].RunChecks());
+            }
             
-            // foreach (string name in proKeysTracks.Keys)
-            // {
-            //     if (proKeysTracks.ContainsKey(name))
-            //     {
-            //         warnings.AddRange(proKeysTracks[name].RunChecks());
-            //     }
-            // }
+            foreach (string name in proKeysTracks.Keys)
+            {
+                warnings.AddRange(proKeysTracks[name].RunChecks());
+            }
 
             return warnings;
         }
