@@ -33,14 +33,14 @@ RipCheck.exe "D:/RB conversions/"
 
 You can specify parameters before the path to enable/disable specific checks:
 
-| Parameter                 | Description                                                        |
-| :--------                 | :----------                                                        |
-| `n`/`--notesonly`         | Only scan files called "notes.mid".                                |
-| `u`/`unknownnotes`        | Check for unrecognized notes and Pro Guitar fret numbers/channels. |
-| `d`/`nodisjoint`          | Don't check for disjoint chords.                                   |
-| `s`/`nochordsnapping`     | Don't check for chord snapping issues.                             |
-| `l`/`nolyricalignment`    | Don't check for lyric alignment issues.                            |
-| `p`/`nolyricphrasechecks` | Don't check for vocals notes outside of phrases.                   |
+| Parameter                   | Description                                                        |
+| :--------                   | :----------                                                        |
+| `n`/`--notesonly`           | Only scan files called "notes.mid".                                |
+| `u`/`--unknownnotes`        | Check for unrecognized notes and Pro Guitar fret numbers/channels. |
+| `d`/`--nodisjoint`          | Don't check for disjoint chords.                                   |
+| `s`/`--nochordsnapping`     | Don't check for chord snapping issues.                             |
+| `l`/`--nolyricalignment`    | Don't check for lyric alignment issues.                            |
+| `p`/`--nolyricphrasechecks` | Don't check for vocals notes outside of phrases.                   |
 
 ```bat
 RipCheck.exe -n -u "D:/RB conversions/"
