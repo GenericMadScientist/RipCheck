@@ -1,4 +1,4 @@
-﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ namespace RipCheck
         private readonly List<ProKeysNote> notes = new();
         private readonly TempoMap tempoMap;
         private readonly string name;
+        private readonly Difficulty difficulty;
 
         private Warnings trackWarnings = new Warnings();
 
@@ -18,6 +19,21 @@ namespace RipCheck
         {
             name = instrument;
             tempoMap = _tempoMap;
+            switch (name[name.Length - 1])
+            {
+                case 'E':
+                    difficulty = Difficulty.Easy;
+                    break;
+                case 'M':
+                    difficulty = Difficulty.Medium;
+                    break;
+                case 'H':
+                    difficulty = Difficulty.Hard;
+                    break;
+                case 'X':
+                    difficulty = Difficulty.Expert;
+                    break;
+            }
 
             foreach (Note note in track.GetNotes())
             {
