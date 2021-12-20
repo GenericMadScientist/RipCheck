@@ -1,4 +1,4 @@
-﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Core;
 using System.Collections.Generic;
 using Melanchall.DryWetMidi.Interaction;
 
@@ -30,6 +30,8 @@ namespace RipCheck
                 switch (name)
                 {
                     case "PART GUITAR":
+                    case "PART GUITAR COOP":
+                    case "PART RHYTHM":
                     case "PART BASS":
                     case "PART KEYS":
                     case "T1 GEMS":
