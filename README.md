@@ -31,14 +31,7 @@ through every .mid file contained within:
 RipCheck.exe "D:/RB conversions/"
 ```
 
-You can specify parameters before the path to enable/disable specific checks:
-
-| Parameter         | Description                                                                     |
-| :--------         | :----------                                                                     |
-| `n`/`--notesonly` | Only scan files called "notes.mid".                                             |
-| `a`/`--checkall`  | Enables checking of Pro instruments and unknown notes. Overrides `-g` and `-r`. |
-| `r`/`--rbpro`     | Enables checking of Pro instruments.                                            |
-| `g`/`--ghband`    | Excludes the disjoint chord check for GHWT and onward songs.                    |
+You can specify parameters before the path to enable/disable specific checks, like so:
 
 ```bat
 RipCheck.exe -n -a "D:/RB conversions/"
@@ -48,5 +41,14 @@ All warnings will be printed to the console. It is advised to redirect the
 output to a file:
 
 ```bat
-RipCheck.exe -n -u "D:/RB conversions/" > warnings.txt
+RipCheck.exe -n -a "D:/RB conversions/" > warnings.txt
 ```
+
+The options are as follows:
+
+| Parameter         | Description                                                                     |
+| :--------         | :----------                                                                     |
+| `n`/`--notesonly` | Only scan files called "notes.mid".                                             |
+| `a`/`--checkall`  | Enables checking of Pro instruments and unknown notes. Overrides `-g` and `-r`. |
+| `r`/`--rbpro`     | Enables checking of Pro instruments.                                            |
+| `g`/`--ghband`    | Excludes the disjoint chord check for GHWT and onward songs.                    |
