@@ -1,6 +1,7 @@
-using CommandLine;
+﻿using CommandLine;
 using Melanchall.DryWetMidi.Core;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace RipCheck
