@@ -15,7 +15,7 @@ namespace RipCheck
 
         private readonly Warnings trackWarnings = new Warnings();
 
-        public GuitarTrack(TrackChunk track, TempoMap _tempoMap, string instrument, Options parameters)
+        public GuitarTrack(TrackChunk track, TempoMap _tempoMap, string instrument, CheckOptions parameters)
         {
             name = instrument;
             tempoMap = _tempoMap;
@@ -49,13 +49,10 @@ namespace RipCheck
             }
         }
 
-        public Warnings RunChecks(Options parameters)
+        public Warnings RunChecks(CheckOptions parameters)
         {
-            if (!parameters.NoChordSnapping)
-            {
-                trackWarnings.AddRange(CheckChordSnapping());
-            }
-            if (!parameters.NoDisjoints)
+            trackWarnings.AddRange(CheckChordSnapping());
+            if (parameters.Disjoints)
             {
                 if (name != "PART KEYS")
                 {

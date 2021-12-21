@@ -16,7 +16,7 @@ namespace RipCheck
 
         private readonly Warnings trackWarnings = new Warnings();
 
-        public ProKeysTrack(TrackChunk track, TempoMap _tempoMap, string instrument, Options parameters)
+        public ProKeysTrack(TrackChunk track, TempoMap _tempoMap, string instrument, CheckOptions parameters)
         {
             name = instrument;
             tempoMap = _tempoMap;
@@ -58,12 +58,9 @@ namespace RipCheck
             }
         }
 
-        public Warnings RunChecks(Options parameters)
+        public Warnings RunChecks()
         {
-            if (!parameters.NoChordSnapping)
-            {
-                trackWarnings.AddRange(CheckChordSnapping());
-            }
+            trackWarnings.AddRange(CheckChordSnapping());
             return trackWarnings;
         }
 

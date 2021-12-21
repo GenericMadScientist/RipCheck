@@ -10,39 +10,73 @@ namespace RipCheck
         [Option('n', "notesonly", Required = false, HelpText = "Only scan files called \"notes.mid\".")]
         public bool NotesOnly { get; set; }
 
-        [Option('u', "unknownnotes", Required = false, HelpText = "Check for unrecognized notes and Pro Guitar fret numbers/channels.")]
-        public bool UnknownNotes { get; set; }
+        [Option('a', "checkall", Required = false, HelpText = "Enables checking of Pro instruments and unknown notes. Overrides -g and -r.")]
+        public bool CheckAll { get; set; }
 
-        [Option('d', "nodisjoint", Required = false, HelpText = "Don't check for disjoint chords.")]
-        public bool NoDisjoints { get; set; }
+        [Option('r', "rbpro", Required = false, HelpText = "Enables checking of Pro instruments.")]
+        public bool RBPro { get; set; }
 
-        [Option('s', "nochordsnapping", Required = false, HelpText = "Don't check for chord snapping issues.")]
-        public bool NoChordSnapping { get; set; }
-
-        [Option('l', "nolyricalignment", Required = false, HelpText = "Don't check for lyric alignment issues.")]
-        public bool NoLyricAlignment { get; set; }
-
-        [Option('p', "nolyricphrasechecks", Required = false, HelpText = "Don't check for vocals notes outside of phrases.")]
-        public bool NoLyricPhraseChecks { get; set; }
+        [Option('g', "ghband", Required = false, HelpText = "Excludes the disjoint chord check for GHWT and onward songs.")]
+        public bool GHBand { get; set; }
 
         [Value(0, HelpText = "Directory to check the charts of.")]
         public string Directory { get; set; }
+    }
+
+    public class CheckOptions
+    {
+        /// <summary>
+        /// Check for unrecognized notes and Pro Guitar fret numbers/channels.
+        /// </summary>
+        public bool UnknownNotes { get; set; }
+
+        /// <summary>
+        /// Check for disjoint chords on 5-fret tracks.
+        /// </summary>
+        public bool Disjoints { get; set; }
+
+        /// <summary>
+        /// Check Pro Guitar/Keys for issues.
+        /// </summary>
+        public bool ProTracks { get; set; }
     }
 
     class Program
     {
         static void Main(string[] args)
         {
-            Options parameters = new();
+            CheckOptions parameters = new()
+            {
+                UnknownNotes = false,
+                Disjoints = true,
+                ProTracks = false
+            };
             bool notesOnly = false;
             string directory = "";
             bool earlyReturn = false;
             Parser.Default.ParseArguments<Options>(args)
                 .WithParsed(o =>
                 {
-                    parameters = o;
                     notesOnly = o.NotesOnly;
                     directory = o.Directory;
+
+                    if (o.CheckAll)
+                    {
+                        parameters.UnknownNotes = true;
+                        parameters.ProTracks = true;
+                    }
+                    else
+                    {
+                        if (o.RBPro)
+                        {
+                            parameters.ProTracks = true;
+                        }
+                        if (o.GHBand)
+                        {
+                            parameters.Disjoints = false;
+                        }
+                    }
+
                     if (directory is null)
                     {
                         earlyReturn = true;
@@ -80,7 +114,7 @@ namespace RipCheck
             }
         }
 
-        private static void CheckMid(string midiPath, Options parameters)
+        private static void CheckMid(string midiPath, CheckOptions parameters)
         {
             var settings = new ReadingSettings
             {

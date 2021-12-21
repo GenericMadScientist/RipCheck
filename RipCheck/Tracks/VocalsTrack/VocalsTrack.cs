@@ -18,7 +18,7 @@ namespace RipCheck
 
         private readonly Warnings trackWarnings = new Warnings();
 
-        public VocalsTrack(TrackChunk track, TempoMap _tempoMap, string instrument, Options parameters)
+        public VocalsTrack(TrackChunk track, TempoMap _tempoMap, string instrument, CheckOptions parameters)
         {
             name = instrument;
             tempoMap = _tempoMap;
@@ -91,16 +91,10 @@ namespace RipCheck
             }
         }
 
-        public Warnings RunChecks(Options parameters, List<(long, long)> extPhrases = null)
+        public Warnings RunChecks(List<(long, long)> extPhrases = null)
         {
-            if (parameters.NoLyricAlignment)
-            {
-                trackWarnings.AddRange(MatchNoteLyrics());
-            }
-            if (parameters.NoLyricPhraseChecks)
-            {
-                trackWarnings.AddRange(CheckPhrases(extPhrases));
-            }
+            trackWarnings.AddRange(MatchNoteLyrics());
+            trackWarnings.AddRange(CheckPhrases(extPhrases));
             return trackWarnings;
         }
 

@@ -1,4 +1,4 @@
-using Melanchall.DryWetMidi.Core;
+﻿using Melanchall.DryWetMidi.Core;
 using System.Collections.Generic;
 using Melanchall.DryWetMidi.Interaction;
 
@@ -14,7 +14,7 @@ namespace RipCheck
         private readonly Dictionary<string, ProGuitarTrack> proGuitarTracks = new();
         private readonly Dictionary<string, ProKeysTrack> proKeysTracks = new();
 
-        public CHSong(MidiFile midi, Options parameters)
+        public CHSong(MidiFile midi, CheckOptions parameters)
         {
             var timeDivision = midi.TimeDivision as TicksPerQuarterNoteTimeDivision;
             if (timeDivision != null)
@@ -62,7 +62,7 @@ namespace RipCheck
             }
         }
 
-        public Warnings RunChecks(Options parameters)
+        public Warnings RunChecks(CheckOptions parameters)
         {
             var warnings = new Warnings();
             if (resolution == -1)
@@ -79,7 +79,7 @@ namespace RipCheck
                 warnings.AddRange(track.RunChecks(parameters));
             }
 
-            warnings.AddRange(drumTrack?.RunChecks(parameters));
+            warnings.AddRange(drumTrack?.RunChecks());
             
             foreach (VocalsTrack track in vocalsTracks.Values)
             {
@@ -92,22 +92,25 @@ namespace RipCheck
                         continue;
                     }
 
-                    warnings.AddRange(track.RunChecks(parameters, vocalsTracks["HARM2"].Phrases));
+                    warnings.AddRange(track.RunChecks(vocalsTracks["HARM2"].Phrases));
                 }
                 else
                 {
-                    warnings.AddRange(track.RunChecks(parameters));
+                    warnings.AddRange(track.RunChecks());
                 }
             }
-            
-            foreach (ProGuitarTrack track in proGuitarTracks.Values)
+
+            if (parameters.ProTracks)
             {
-                warnings.AddRange(track.RunChecks(parameters));
-            }
-            
-            foreach (ProKeysTrack track in proKeysTracks.Values)
-            {
-                warnings.AddRange(track.RunChecks(parameters));
+                foreach (ProGuitarTrack track in proGuitarTracks.Values)
+                {
+                    warnings.AddRange(track.RunChecks(parameters));
+                }
+                
+                foreach (ProKeysTrack track in proKeysTracks.Values)
+                {
+                    warnings.AddRange(track.RunChecks());
+                }
             }
 
             return warnings;
