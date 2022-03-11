@@ -1,4 +1,4 @@
-using Melanchall.DryWetMidi.Core;
+﻿using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
@@ -60,6 +60,7 @@ namespace RipCheck
         public Warnings RunChecks()
         {
             trackWarnings.AddRange(CommonChecks.CheckChordSnapping(difficulty, notes, name, tempoMap));
+            trackWarnings.AddRange(CommonChecks.CheckOverlappingNotes(difficulty, notes, name, tempoMap));
             return trackWarnings;
         }
     }

@@ -52,5 +52,29 @@ namespace RipCheck
 
             return warnings;
         }
+
+        public static Warnings CheckOverlappingNotes(Difficulty difficulty, IList<INote> notes, string name, TempoMap tempoMap)
+        {
+            var warnings = new Warnings();
+
+            IEnumerable<(INote, INote)> pairs = notes.Zip(notes.Skip(1));
+
+            foreach (var (earlyNote, lateNote) in pairs)
+            {
+                if (earlyNote.Note != lateNote.Note)
+                {
+                    continue;
+                }
+
+                if ((earlyNote.Position + earlyNote.Length) <= lateNote.Position)
+                {
+                    continue;
+                }
+
+                warnings.AddTimed($"Overlapping note: {difficulty} on {name}", lateNote.Position, tempoMap);
+            }
+
+            return warnings;
+        }
     }
 }
