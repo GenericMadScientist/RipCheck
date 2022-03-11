@@ -1,4 +1,4 @@
-﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace RipCheck
 {
     class ProGuitarTrack
     {
-        private readonly Dictionary<Difficulty, IList<ProGuitarNote>> notes = new();
+        private readonly Dictionary<Difficulty, IList<INote>> notes = new();
         private readonly TempoMap tempoMap;
         private readonly string name;
         public string Name { get { return name; } }
@@ -20,10 +20,10 @@ namespace RipCheck
             name = instrument;
             tempoMap = _tempoMap;
 
-            notes.Add(Difficulty.Easy, new List<ProGuitarNote>());
-            notes.Add(Difficulty.Medium, new List<ProGuitarNote>());
-            notes.Add(Difficulty.Hard, new List<ProGuitarNote>());
-            notes.Add(Difficulty.Expert, new List<ProGuitarNote>());
+            notes.Add(Difficulty.Easy, new List<INote>());
+            notes.Add(Difficulty.Medium, new List<INote>());
+            notes.Add(Difficulty.Hard, new List<INote>());
+            notes.Add(Difficulty.Expert, new List<INote>());
 
             foreach (Note note in track.GetNotes())
             {
@@ -60,7 +60,7 @@ namespace RipCheck
                 }
 
                 Difficulty difficulty = (Difficulty)((key - 24) / 24);
-                ProGuitarFretColour colour = (ProGuitarFretColour)(key % 24);
+                byte colour = (byte)(key % 24);
                 ProGuitarFretNumber fretNumber = (ProGuitarFretNumber)velocity;
                 notes[difficulty].Add(new ProGuitarNote(colour, fretNumber, note.Time, note.Length));
             }
@@ -80,7 +80,7 @@ namespace RipCheck
         {
             var warnings = new Warnings();
 
-            foreach (KeyValuePair<Difficulty, IList<ProGuitarNote>> item in notes)
+            foreach (KeyValuePair<Difficulty, IList<INote>> item in notes)
             {
                 Difficulty difficulty = item.Key;
                 long[] positions = item.Value.Select(n => n.Position).OrderBy(p => p).ToArray();
@@ -101,7 +101,7 @@ namespace RipCheck
         {
             var warnings = new Warnings();
 
-            foreach (KeyValuePair<Difficulty, IList<ProGuitarNote>> item in notes)
+            foreach (KeyValuePair<Difficulty, IList<INote>> item in notes)
             {
                 Difficulty difficulty = item.Key;
                 (long, long)[] positionLengthPairs = item.Value.Select(n => (n.Position, n.Length)).OrderBy(p => p).ToArray();

@@ -1,14 +1,14 @@
 ﻿namespace RipCheck
 {
-    struct GuitarNote
+    struct GuitarNote : INote
     {
-        public GuitarFretColour Fret { get; }
+        public byte Note { get; }
         public long Position { get; }
         public long Length { get; }
 
-        public GuitarNote(GuitarFretColour fret, long position, long length)
+        public GuitarNote(byte fret, long position, long length)
         {
-            Fret = fret;
+            Note = fret;
             Position = position;
             Length = length;
         }

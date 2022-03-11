@@ -1,4 +1,4 @@
-﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace RipCheck
 {
     class ProKeysTrack
     {
-        private readonly List<ProKeysNote> notes = new();
+        private readonly List<INote> notes = new();
         private readonly TempoMap tempoMap;
         private readonly string name;
         public string Name { get { return name; } }

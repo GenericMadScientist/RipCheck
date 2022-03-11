@@ -1,4 +1,4 @@
-﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace RipCheck
 {
     class VocalsTrack
     {
-        private readonly List<VocalsNote> notes = new();
+        private readonly List<INote> notes = new();
         private readonly Dictionary<long, string> lyrics = new();
         private readonly List<(long, long)> phrases = new();
         public List<(long, long)> Phrases { get { return phrases; } }

@@ -1,4 +1,4 @@
-﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace RipCheck
 {
     class GuitarTrack
     {
-        private readonly Dictionary<Difficulty, IList<GuitarNote>> notes = new();
+        private readonly Dictionary<Difficulty, IList<INote>> notes = new();
         private readonly TempoMap tempoMap;
         private readonly string name;
         public string Name { get { return name; } }
@@ -20,10 +20,10 @@ namespace RipCheck
             name = instrument;
             tempoMap = _tempoMap;
 
-            notes.Add(Difficulty.Easy, new List<GuitarNote>());
-            notes.Add(Difficulty.Medium, new List<GuitarNote>());
-            notes.Add(Difficulty.Hard, new List<GuitarNote>());
-            notes.Add(Difficulty.Expert, new List<GuitarNote>());
+            notes.Add(Difficulty.Easy, new List<INote>());
+            notes.Add(Difficulty.Medium, new List<INote>());
+            notes.Add(Difficulty.Hard, new List<INote>());
+            notes.Add(Difficulty.Expert, new List<INote>());
 
             foreach (Note note in track.GetNotes())
             {
@@ -44,7 +44,7 @@ namespace RipCheck
                 }
 
                 Difficulty difficulty = (Difficulty)((key - 60) / 12);
-                GuitarFretColour colour = (GuitarFretColour)(key % 12);
+                byte colour = (byte)(key % 12);
                 notes[difficulty].Add(new GuitarNote(colour, note.Time, note.Length));
             }
         }
@@ -67,7 +67,7 @@ namespace RipCheck
         {
             var warnings = new Warnings();
 
-            foreach (KeyValuePair<Difficulty, IList<GuitarNote>> item in notes)
+            foreach (KeyValuePair<Difficulty, IList<INote>> item in notes)
             {
                 Difficulty difficulty = item.Key;
                 long[] positions = item.Value.Select(n => n.Position).OrderBy(p => p).ToArray();
@@ -88,7 +88,7 @@ namespace RipCheck
         {
             var warnings = new Warnings();
 
-            foreach (KeyValuePair<Difficulty, IList<GuitarNote>> item in notes)
+            foreach (KeyValuePair<Difficulty, IList<INote>> item in notes)
             {
                 Difficulty difficulty = item.Key;
                 (long, long)[] positionLengthPairs = item.Value.Select(n => (n.Position, n.Length)).OrderBy(p => p).ToArray();
