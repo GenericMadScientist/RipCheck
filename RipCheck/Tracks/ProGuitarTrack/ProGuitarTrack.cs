@@ -2,7 +2,6 @@ using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace RipCheck
 {
@@ -68,63 +67,20 @@ namespace RipCheck
 
         public Warnings RunChecks(CheckOptions parameters)
         {
-            trackWarnings.AddRange(CheckChordSnapping());
+            foreach (KeyValuePair<Difficulty, IList<INote>> difficulty in notes)
+            {
+                trackWarnings.AddRange(CommonChecks.CheckChordSnapping(difficulty.Key, difficulty.Value, name, tempoMap));
+            }
+
             if (parameters.Disjoints)
             {
-                trackWarnings.AddRange(CheckDisjointChords());
+                foreach (KeyValuePair<Difficulty, IList<INote>> difficulty in notes)
+                {
+                    trackWarnings.AddRange(CommonChecks.CheckDisjointChords(difficulty.Key, difficulty.Value, name, tempoMap));
+                }
             }
+
             return trackWarnings;
-        }
-
-        public Warnings CheckChordSnapping()
-        {
-            var warnings = new Warnings();
-
-            foreach (KeyValuePair<Difficulty, IList<INote>> item in notes)
-            {
-                Difficulty difficulty = item.Key;
-                long[] positions = item.Value.Select(n => n.Position).OrderBy(p => p).ToArray();
-                IEnumerable<(long, long)> gaps = positions.Zip(positions.Skip(1), (p, q) => (p, q - p));
-                foreach (var (position, gap) in gaps)
-                {
-                    if (gap > 0 && gap < 10)
-                    {
-                        trackWarnings.AddTimed($"Chord snapping: {difficulty} on {name}", position, tempoMap);
-                    }
-                }
-            }
-
-            return warnings;
-        }
-
-        public Warnings CheckDisjointChords()
-        {
-            var warnings = new Warnings();
-
-            foreach (KeyValuePair<Difficulty, IList<INote>> item in notes)
-            {
-                Difficulty difficulty = item.Key;
-                (long, long)[] positionLengthPairs = item.Value.Select(n => (n.Position, n.Length)).OrderBy(p => p).ToArray();
-                IEnumerable<((long, long), (long, long))> pairs = positionLengthPairs.Zip(positionLengthPairs.Skip(1));
-                foreach (var ((earlyPos, earlyLength), (latePos, lateLength)) in pairs)
-                {
-                    if (earlyPos != latePos)
-                    {
-                        continue;
-                    }
-                    if (earlyLength == lateLength)
-                    {
-                        continue;
-                    }
-                    if (lateLength <= 160)
-                    {
-                        continue;
-                    }
-                    trackWarnings.AddTimed($"Disjoint chord: {difficulty} on {name}", latePos, tempoMap);
-                }
-            }
-
-            return warnings;
         }
     }
 }

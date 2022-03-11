@@ -2,7 +2,6 @@ using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace RipCheck
 {
@@ -60,25 +59,8 @@ namespace RipCheck
 
         public Warnings RunChecks()
         {
-            trackWarnings.AddRange(CheckChordSnapping());
+            trackWarnings.AddRange(CommonChecks.CheckChordSnapping(difficulty, notes, name, tempoMap));
             return trackWarnings;
-        }
-
-        public Warnings CheckChordSnapping()
-        {
-            var warnings = new Warnings();
-
-            long[] positions = notes.Select(n => n.Position).OrderBy(p => p).ToArray();
-            IEnumerable<(long, long)> gaps = positions.Zip(positions.Skip(1), (p, q) => (p, q - p));
-            foreach (var (position, gap) in gaps)
-            {
-                if (gap > 0 && gap < 10)
-                {
-                    trackWarnings.AddTimed($"Chord snapping: {difficulty} on {name}", position, tempoMap);
-                }
-            }
-
-            return warnings;
         }
     }
 }
