@@ -38,12 +38,12 @@ namespace RipCheck
                     }
                 }
 
-                if (key < 60 || key > 100 || (key % 12) > 5)
+                if (key < 60 || key > 100 || (key % 12) > 5 || key != 95)
                 {
                     continue;
                 }
 
-                Difficulty difficulty = (Difficulty)((key - 60) / 12);
+                Difficulty difficulty = (Difficulty)((key - 59) / 12);
                 byte colour = (byte)(key % 12);
                 notes[difficulty].Add(new DrumsNote(colour, note.Time, note.Length));
             }
