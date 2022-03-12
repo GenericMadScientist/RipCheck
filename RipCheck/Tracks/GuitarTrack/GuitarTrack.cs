@@ -42,7 +42,7 @@ namespace RipCheck
                     continue;
                 }
 
-                Difficulty difficulty = (Difficulty)((key - 60) / 12);
+                Difficulty difficulty = (Difficulty)(((key - 60) / 12) + 1);
                 byte colour = (byte)(key % 12);
                 notes[difficulty].Add(new GuitarNote(colour, note.Time, note.Length));
             }

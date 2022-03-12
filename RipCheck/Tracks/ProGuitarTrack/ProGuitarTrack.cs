@@ -58,7 +58,7 @@ namespace RipCheck
                     }
                 }
 
-                Difficulty difficulty = (Difficulty)((key - 24) / 24);
+                Difficulty difficulty = (Difficulty)(((key - 24) / 24) + 1);
                 byte colour = (byte)(key % 24);
                 ProGuitarFretNumber fretNumber = (ProGuitarFretNumber)velocity;
                 notes[difficulty].Add(new ProGuitarNote(colour, fretNumber, note.Time, note.Length));

@@ -42,7 +42,7 @@ namespace RipCheck
                     continue;
                 }
 
-                Difficulty difficulty = (Difficulty)((key - 59) / 12);
+                Difficulty difficulty = (Difficulty)(((key - 59) / 12) + 1);
                 byte colour = (byte)(key % 12);
                 notes[difficulty].Add(new DrumsNote(colour, note.Time, note.Length));
             }
