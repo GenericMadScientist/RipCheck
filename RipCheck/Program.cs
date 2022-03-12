@@ -1,4 +1,4 @@
-﻿using CommandLine;
+using CommandLine;
 using Melanchall.DryWetMidi.Core;
 using System;
 using System.Diagnostics;
@@ -20,6 +20,9 @@ namespace RipCheck
         [Option('g', "ghband", Required = false, HelpText = "Excludes the disjoint chord check for GHWT and onward songs.")]
         public bool GHBand { get; set; }
 
+        [Option('v', "vocals", Required = false, HelpText = "Enables checking the vocals track for issues.")]
+        public bool Vocals { get; set; }
+
         [Value(0, HelpText = "Directory to check the charts of.")]
         public string Directory { get; set; }
     }
@@ -40,6 +43,11 @@ namespace RipCheck
         /// Check Pro Guitar/Keys for issues.
         /// </summary>
         public bool ProTracks { get; set; }
+
+        /// <summary>
+        /// Check Vocals for issues.
+        /// </summary>
+        public bool Vocals { get; set; }
     }
 
     class Program
@@ -50,7 +58,8 @@ namespace RipCheck
             {
                 UnknownNotes = false,
                 Disjoints = true,
-                ProTracks = false
+                ProTracks = false,
+                Vocals = false
             };
             bool notesOnly = false;
             string directory = "";
@@ -65,6 +74,7 @@ namespace RipCheck
                     {
                         parameters.UnknownNotes = true;
                         parameters.ProTracks = true;
+                        parameters.Vocals = true;
                     }
                     else
                     {
@@ -76,6 +86,7 @@ namespace RipCheck
                         {
                             parameters.Disjoints = false;
                         }
+                        parameters.Vocals = o.Vocals;
                     }
 
                     if (directory is null)
