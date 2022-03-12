@@ -94,6 +94,7 @@ namespace RipCheck
         {
             trackWarnings.AddRange(MatchNoteLyrics());
             trackWarnings.AddRange(CheckPhrases(extPhrases));
+            trackWarnings.AddRange(CommonChecks.CheckOverlappingNotes(Difficulty.None, notes, name, tempoMap));
             return trackWarnings;
         }
 
