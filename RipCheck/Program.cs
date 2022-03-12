@@ -162,6 +162,7 @@ namespace RipCheck
             else
             {
                 Debug.WriteLine("No problems found");
+                Debug.Write("\n"); // thanks for not having a 0-parameter overload, Debug.WriteLine();
             }
         }
     }
