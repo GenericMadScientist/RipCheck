@@ -53,10 +53,6 @@ namespace RipCheck
             foreach (KeyValuePair<Difficulty, IList<INote>> difficulty in notes)
             {
                 trackWarnings.AddRange(CommonChecks.CheckChordSnapping(difficulty.Key, difficulty.Value, name, tempoMap));
-            }
-
-            foreach (KeyValuePair<Difficulty, IList<INote>> difficulty in notes)
-            {
                 trackWarnings.AddRange(CommonChecks.CheckOverlappingNotes(difficulty.Key, difficulty.Value, name, tempoMap));
             }
 
