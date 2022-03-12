@@ -17,7 +17,14 @@ namespace RipCheck
             {
                 if (gap > 0 && gap < 10)
                 {
-                    warnings.AddTimed($"Chord snapping: {difficulty} on {name}", position, tempoMap);
+                    if (difficulty == Difficulty.None)
+                    {
+                        warnings.AddTimed($"Chord snapping: {name}", position, tempoMap);
+                    }
+                    else
+                    {
+                        warnings.AddTimed($"Chord snapping: {difficulty} on {name}", position, tempoMap);
+                    }
                 }
             }
 
@@ -47,7 +54,14 @@ namespace RipCheck
                     continue;
                 }
 
-                warnings.AddTimed($"Disjoint chord: {difficulty} on {name}", lateNote.Position, tempoMap);
+                if (difficulty == Difficulty.None)
+                {
+                    warnings.AddTimed($"Disjoint chord: {name}", lateNote.Position, tempoMap);
+                }
+                else
+                {
+                    warnings.AddTimed($"Disjoint chord: {difficulty} on {name}", lateNote.Position, tempoMap);
+                }
             }
 
             return warnings;
@@ -71,7 +85,14 @@ namespace RipCheck
                     continue;
                 }
 
-                warnings.AddTimed($"Overlapping note: {difficulty} on {name}", lateNote.Position, tempoMap);
+                if (difficulty == Difficulty.None)
+                {
+                    warnings.AddTimed($"Overlapping note: {name}", lateNote.Position, tempoMap);
+                }
+                else
+                {
+                    warnings.AddTimed($"Overlapping note: {difficulty} on {name}", lateNote.Position, tempoMap);
+                }
             }
 
             return warnings;
