@@ -2,13 +2,12 @@
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace RipCheck
 {
     class VocalsTrack
     {
-        private readonly List<VocalsNote> notes = new();
+        private readonly List<INote> notes = new();
         private readonly Dictionary<long, string> lyrics = new();
         private readonly List<(long, long)> phrases = new();
         public List<(long, long)> Phrases { get { return phrases; } }
@@ -95,6 +94,7 @@ namespace RipCheck
         {
             trackWarnings.AddRange(MatchNoteLyrics());
             trackWarnings.AddRange(CheckPhrases(extPhrases));
+            trackWarnings.AddRange(CommonChecks.CheckOverlappingNotes(Difficulty.None, notes, name, tempoMap));
             return trackWarnings;
         }
 

@@ -81,22 +81,25 @@ namespace RipCheck
 
             warnings.AddRange(drumTrack?.RunChecks());
             
-            foreach (VocalsTrack track in vocalsTracks.Values)
+            if (parameters.Vocals)
             {
-                if (track.Name == "HARM3")
+                foreach (VocalsTrack track in vocalsTracks.Values)
                 {
-                    // HARM3 does not have phrase markers, so we have to use HARM2's phrases instead
-                    if (!vocalsTracks.ContainsKey("HARM2"))
+                    if (track.Name == "HARM3")
                     {
-                        warnings.Add("Track HARM3 present without track HARM2, skipping it");
-                        continue;
-                    }
+                        // HARM3 does not have phrase markers, so we have to use HARM2's phrases instead
+                        if (!vocalsTracks.ContainsKey("HARM2"))
+                        {
+                            warnings.Add("Track HARM3 present without track HARM2, skipping it");
+                            continue;
+                        }
 
-                    warnings.AddRange(track.RunChecks(vocalsTracks["HARM2"].Phrases));
-                }
-                else
-                {
-                    warnings.AddRange(track.RunChecks());
+                        warnings.AddRange(track.RunChecks(vocalsTracks["HARM2"].Phrases));
+                    }
+                    else
+                    {
+                        warnings.AddRange(track.RunChecks());
+                    }
                 }
             }
 

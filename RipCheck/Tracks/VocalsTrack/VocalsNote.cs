@@ -1,6 +1,6 @@
 ﻿namespace RipCheck
 {
-    struct VocalsNote
+    struct VocalsNote : INote
     {
         public byte Note { get; }
         public long Position { get; }

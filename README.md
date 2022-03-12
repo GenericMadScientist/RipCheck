@@ -14,6 +14,7 @@ Current checks include:
 - Check for chord snapping problems
 - Check for disjoint chords
 - Check for unknown notes (disabled by default)
+- Check for overlapping notes of the same color
 - On vocals, check for misaligned lyrics/notes and notes outside of phrases
 
 More may be added over time.

@@ -1,6 +1,6 @@
 ﻿namespace RipCheck
 {
-    struct ProKeysNote
+    struct ProKeysNote : INote
     {
         public byte Note { get; }
         public long Position { get; }

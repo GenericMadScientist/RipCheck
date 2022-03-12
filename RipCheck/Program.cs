@@ -20,6 +20,9 @@ namespace RipCheck
         [Option('g', "ghband", Required = false, HelpText = "Excludes the disjoint chord check for GHWT and onward songs.")]
         public bool GHBand { get; set; }
 
+        [Option('v', "vocals", Required = false, HelpText = "Enables checking the vocals track for issues.")]
+        public bool Vocals { get; set; }
+
         [Value(0, HelpText = "Directory to check the charts of.")]
         public string Directory { get; set; }
     }
@@ -40,6 +43,11 @@ namespace RipCheck
         /// Check Pro Guitar/Keys for issues.
         /// </summary>
         public bool ProTracks { get; set; }
+
+        /// <summary>
+        /// Check Vocals for issues.
+        /// </summary>
+        public bool Vocals { get; set; }
     }
 
     class Program
@@ -50,7 +58,8 @@ namespace RipCheck
             {
                 UnknownNotes = false,
                 Disjoints = true,
-                ProTracks = false
+                ProTracks = false,
+                Vocals = false
             };
             bool notesOnly = false;
             string directory = "";
@@ -65,6 +74,7 @@ namespace RipCheck
                     {
                         parameters.UnknownNotes = true;
                         parameters.ProTracks = true;
+                        parameters.Vocals = true;
                     }
                     else
                     {
@@ -76,6 +86,7 @@ namespace RipCheck
                         {
                             parameters.Disjoints = false;
                         }
+                        parameters.Vocals = o.Vocals;
                     }
 
                     if (directory is null)
@@ -101,6 +112,9 @@ namespace RipCheck
                 return;
             }
 
+            Console.WriteLine($"Checking directory {directory}");
+            Console.WriteLine(); // Put a line break between the starting message and the warnings
+
             var fileOptions = new EnumerationOptions
             {
                 RecurseSubdirectories = true,
@@ -113,6 +127,8 @@ namespace RipCheck
                 Debug.WriteLine($"Checking {midi.FullName}");
                 CheckMid(midi.FullName, parameters);
             }
+
+            Console.WriteLine($"Done.");
         }
 
         private static void CheckMid(string midiPath, CheckOptions parameters)
@@ -142,6 +158,11 @@ namespace RipCheck
                 Console.WriteLine($"File {midiPath} has problems");
                 warnings.PrintWarnings();
                 Console.WriteLine(); // Put a line break between each file's warnings
+            }
+            else
+            {
+                Debug.WriteLine("No problems found");
+                Debug.Write("\n"); // thanks for not having a 0-parameter overload, Debug.WriteLine();
             }
         }
     }
