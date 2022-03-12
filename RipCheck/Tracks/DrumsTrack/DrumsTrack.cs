@@ -37,7 +37,12 @@ namespace RipCheck
                     }
                 }
 
-                if (key < 60 || key > 100 || (key % 12) > 5 || key != 95)
+                if (key < 60 || key > 100)
+                {
+                    continue;
+                }
+
+                if (key != 95 && (key % 12) > 5)
                 {
                     continue;
                 }
