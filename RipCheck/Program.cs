@@ -159,6 +159,10 @@ namespace RipCheck
                 warnings.PrintWarnings();
                 Console.WriteLine(); // Put a line break between each file's warnings
             }
+            else
+            {
+                Debug.WriteLine("No problems found");
+            }
         }
     }
 }
