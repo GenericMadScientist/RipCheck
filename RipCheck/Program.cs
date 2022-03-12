@@ -1,4 +1,4 @@
-using CommandLine;
+﻿using CommandLine;
 using Melanchall.DryWetMidi.Core;
 using System;
 using System.Diagnostics;
@@ -112,6 +112,9 @@ namespace RipCheck
                 return;
             }
 
+            Console.WriteLine($"Checking directory {directory}");
+            Console.WriteLine(); // Put a line break between the starting message and the warnings
+
             var fileOptions = new EnumerationOptions
             {
                 RecurseSubdirectories = true,
@@ -124,6 +127,8 @@ namespace RipCheck
                 Debug.WriteLine($"Checking {midi.FullName}");
                 CheckMid(midi.FullName, parameters);
             }
+
+            Console.WriteLine($"Done.");
         }
 
         private static void CheckMid(string midiPath, CheckOptions parameters)
