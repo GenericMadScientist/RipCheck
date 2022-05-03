@@ -23,6 +23,9 @@ namespace RipCheck
         [Option('v', "vocals", Required = false, HelpText = "Enables checking the vocals track for issues.")]
         public bool Vocals { get; set; }
 
+        [Option('m', "missing", Required = false, HelpText = "Checks for missing instrument tracks.")]
+        public bool MissingTracks { get; set; }
+
         [Value(0, HelpText = "Directory to check the charts of.")]
         public string Directory { get; set; }
     }
@@ -48,6 +51,11 @@ namespace RipCheck
         /// Check Vocals for issues.
         /// </summary>
         public bool Vocals { get; set; }
+
+        /// <summary>
+        /// Check for missing tracks.
+        /// </summary>
+        public bool MissingTracks { get; set; }
     }
 
     class Program
@@ -59,7 +67,8 @@ namespace RipCheck
                 UnknownNotes = false,
                 Disjoints = true,
                 ProTracks = false,
-                Vocals = false
+                Vocals = false,
+                MissingTracks = false
             };
             bool notesOnly = false;
             string directory = "";
@@ -75,6 +84,7 @@ namespace RipCheck
                         parameters.UnknownNotes = true;
                         parameters.ProTracks = true;
                         parameters.Vocals = true;
+                        parameters.MissingTracks = true;
                     }
                     else
                     {
@@ -87,6 +97,7 @@ namespace RipCheck
                             parameters.Disjoints = false;
                         }
                         parameters.Vocals = o.Vocals;
+                        parameters.MissingTracks = o.MissingTracks;
                     }
 
                     if (directory is null)

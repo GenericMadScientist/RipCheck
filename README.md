@@ -53,3 +53,4 @@ The options are as follows:
 | `a`/`--checkall`  | Enables checking of Pro instruments and unknown notes. Overrides `-g` and `-r`. |
 | `r`/`--rbpro`     | Enables checking of Pro instruments.                                            |
 | `g`/`--ghband`    | Excludes the disjoint chord check for GHWT and onward songs.                    |
+| `m`/`--missing`   | Checks for certain missing tracks (vox, guitar, bass, drums, keys).             |
