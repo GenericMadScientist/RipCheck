@@ -64,7 +64,7 @@ namespace RipCheck
 
             if (parameters.Disjoints)
             {
-                if (name != "PART KEYS")
+                if (name != TrackNames.Keys)
                 {
                     foreach (KeyValuePair<Difficulty, IList<INote>> difficulty in notes)
                     {
