@@ -35,25 +35,26 @@ namespace RipCheck
                     break;
             }
 
-            foreach (Note note in track.GetNotes())
+            foreach (Note midiNote in track.GetNotes())
             {
-                byte key = note.NoteNumber;
+                byte key = midiNote.NoteNumber;
+                var note = (ProKeysTrackNote)key;
 
                 if (parameters.UnknownNotes)
                 {
                     if (!Enum.IsDefined(typeof(ProKeysTrackNote), key))
                     {
-                        trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
+                        trackWarnings.AddTimed($"Unknown note: {key} on {name}", midiNote.Time, tempoMap);
                         continue;
                     }
                 }
 
-                if (key < 48 || key > 72)
+                if (note < ProKeysTrackNote.C1 || note > ProKeysTrackNote.C3)
                 {
                     continue;
                 }
 
-                notes.Add(new ProKeysNote(key, note.Time, note.Length));
+                notes.Add(new ProKeysNote(key, midiNote.Time, midiNote.Length));
             }
         }
 

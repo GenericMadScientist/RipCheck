@@ -14,6 +14,10 @@ namespace RipCheck
 
         private readonly Warnings trackWarnings = new Warnings();
 
+        private const int difficultiesStart = (int)GuitarTrackNote.EasyGreen;
+        private const int difficultyRange = GuitarTrackNote.MediumGreen - GuitarTrackNote.EasyGreen;
+        private const int difficultyMaxIndex = GuitarTrackNote.EasyOrange - GuitarTrackNote.EasyGreen;
+
         public GuitarTrack(TrackChunk track, TempoMap _tempoMap, string instrument, CheckOptions parameters)
         {
             name = instrument;
@@ -24,27 +28,29 @@ namespace RipCheck
             notes.Add(Difficulty.Hard, new List<INote>());
             notes.Add(Difficulty.Expert, new List<INote>());
 
-            foreach (Note note in track.GetNotes())
+            foreach (Note midiNote in track.GetNotes())
             {
-                byte key = note.NoteNumber;
+                byte key = midiNote.NoteNumber;
+                var note = (GuitarTrackNote)key;
 
                 if (parameters.UnknownNotes)
                 {
                     if (!Enum.IsDefined(typeof(GuitarTrackNote), key))
                     {
-                        trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
+                        trackWarnings.AddTimed($"Unknown note: {key} on {name}", midiNote.Time, tempoMap);
                         continue;
                     }
                 }
 
-                if (key < 60 || key > 100 || (key % 12) > 4)
+                if (note < GuitarTrackNote.EasyGreen || note > GuitarTrackNote.ExpertOrange ||
+                    (key % difficultiesStart) > difficultyMaxIndex)
                 {
                     continue;
                 }
 
-                Difficulty difficulty = (Difficulty)(((key - 60) / 12) + 1);
-                byte colour = (byte)(key % 12);
-                notes[difficulty].Add(new GuitarNote(colour, note.Time, note.Length));
+                Difficulty difficulty = Difficulty.Easy + ((key - difficultiesStart) / difficultyRange);
+                byte colour = (byte)(key % difficultyRange);
+                notes[difficulty].Add(new GuitarNote(colour, midiNote.Time, midiNote.Length));
             }
         }
 

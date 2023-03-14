@@ -50,35 +50,36 @@ namespace RipCheck
                 }
             }
 
-            foreach (Note note in track.GetNotes())
+            foreach (Note midiNote in track.GetNotes())
             {
-                byte key = note.NoteNumber;
+                byte key = midiNote.NoteNumber;
+                var note = (VocalsTrackNote)key;
 
                 if (parameters.UnknownNotes)
                 {
                     if (!Enum.IsDefined(typeof(VocalsTrackNote), key))
                     {
-                        trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
+                        trackWarnings.AddTimed($"Unknown note: {key} on {name}", midiNote.Time, tempoMap);
                         continue;
                     }
                 }
 
-                if (key == (byte)VocalsTrackNote.LyricsPhrase1 || key == (byte)VocalsTrackNote.LyricsPhrase2)
+                if (note == VocalsTrackNote.LyricsPhrase1 || note == VocalsTrackNote.LyricsPhrase2)
                 {
-                    phrases.Add((note.Time, note.Time + note.Length));
+                    phrases.Add((midiNote.Time, midiNote.Time + midiNote.Length));
                     continue;
                 }
 
-                if (key < 36 || key > 84)
+                if (note < VocalsTrackNote.C2 || note > VocalsTrackNote.C6)
                 {
                     // Include the percussion notes
-                    if (!(key == 96 || key == 97))
+                    if (!(note == VocalsTrackNote.ShownPercussion || note == VocalsTrackNote.NotShownPercussion))
                     {
                         continue;
                     }
                 }
 
-                var noteTime = note.Time;
+                var noteTime = midiNote.Time;
                 string text = String.Empty;
                 if (lyrics.ContainsKey(noteTime))
                 {
@@ -86,7 +87,7 @@ namespace RipCheck
                     lyrics.Remove(noteTime);
                 }
 
-                notes.Add(new VocalsNote(key, note.Time, note.Length, text));
+                notes.Add(new VocalsNote(key, midiNote.Time, midiNote.Length, text));
             }
         }
 
@@ -116,7 +117,7 @@ namespace RipCheck
                 if (note.Text == String.Empty)
                 {
                     // Exclude percussion notes
-                    if (note.Note == 96 || note.Note == 97)
+                    if (note.Note == (byte)VocalsTrackNote.ShownPercussion || note.Note == (byte)VocalsTrackNote.NotShownPercussion)
                     {
                         continue;
                     }
