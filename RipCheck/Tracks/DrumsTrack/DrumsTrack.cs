@@ -14,6 +14,10 @@ namespace RipCheck
 
         private readonly Warnings trackWarnings = new Warnings();
 
+        private const int difficultiesStart = (int)DrumsTrackNote.EasyKick - 1; // -1 to account for 2x Kick
+        private const int difficultyRange = DrumsTrackNote.MediumKick - DrumsTrackNote.EasyKick;
+        private const int difficultyMaxIndex = DrumsTrackNote.Easy5LaneGreen - DrumsTrackNote.EasyKick;
+
         public DrumsTrack(TrackChunk track, TempoMap _tempoMap, string instrument, CheckOptions parameters)
         {
             name = instrument;
@@ -24,32 +28,33 @@ namespace RipCheck
             notes.Add(Difficulty.Hard, new List<INote>());
             notes.Add(Difficulty.Expert, new List<INote>());
 
-            foreach (Note note in track.GetNotes())
+            foreach (Note midiNote in track.GetNotes())
             {
-                byte key = note.NoteNumber;
+                byte key = midiNote.NoteNumber;
+                var note = (DrumsTrackNote)key;
 
                 if (parameters.UnknownNotes)
                 {
                     if (!Enum.IsDefined(typeof(DrumsTrackNote), key))
                     {
-                        trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
+                        trackWarnings.AddTimed($"Unknown note: {key} on {name}", midiNote.Time, tempoMap);
                         continue;
                     }
                 }
 
-                if (key < 60 || key > 100)
+                if (note < DrumsTrackNote.EasyKick || note > DrumsTrackNote.Expert5LaneGreen)
                 {
                     continue;
                 }
 
-                if (key != 95 && (key % 12) > 5)
+                if (note != DrumsTrackNote.ExpertPlusKick && (key % difficultyRange) > difficultyMaxIndex)
                 {
                     continue;
                 }
 
-                Difficulty difficulty = (Difficulty)(((key - 59) / 12) + 1);
-                byte colour = (byte)(key % 12);
-                notes[difficulty].Add(new DrumsNote(colour, note.Time, note.Length));
+                Difficulty difficulty = Difficulty.Easy + ((key - difficultiesStart) / difficultyRange);
+                byte colour = (byte)(key % difficultyRange);
+                notes[difficulty].Add(new DrumsNote(colour, midiNote.Time, midiNote.Length));
             }
         }
 

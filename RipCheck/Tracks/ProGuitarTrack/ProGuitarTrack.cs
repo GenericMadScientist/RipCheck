@@ -14,6 +14,10 @@ namespace RipCheck
 
         private readonly Warnings trackWarnings = new Warnings();
 
+        private const int difficultiesStart = (int)ProGuitarTrackNote.EasyRed;
+        private const int difficultyRange = ProGuitarTrackNote.MediumRed - ProGuitarTrackNote.EasyRed;
+        private const int difficultyMaxIndex = ProGuitarTrackNote.EasyPurple - ProGuitarTrackNote.EasyRed;
+
         public ProGuitarTrack(TrackChunk track, TempoMap _tempoMap, string instrument, CheckOptions parameters)
         {
             name = instrument;
@@ -24,44 +28,46 @@ namespace RipCheck
             notes.Add(Difficulty.Hard, new List<INote>());
             notes.Add(Difficulty.Expert, new List<INote>());
 
-            foreach (Note note in track.GetNotes())
+            foreach (Note midiNote in track.GetNotes())
             {
-                byte key = note.NoteNumber;
-                byte velocity = note.Velocity;
-                byte channel = note.Channel;
+                byte key = midiNote.NoteNumber;
+                byte velocity = midiNote.Velocity;
+                byte channel = midiNote.Channel;
+                var note = (ProGuitarTrackNote)key;
+                var fret = (ProGuitarFretNumber)velocity;
 
                 if (parameters.UnknownNotes)
                 {
                     if (!Enum.IsDefined(typeof(ProGuitarTrackNote), key))
                     {
-                        trackWarnings.AddTimed($"Unknown note: {key} on {name}", note.Time, tempoMap);
+                        trackWarnings.AddTimed($"Unknown note: {key} on {name}", midiNote.Time, tempoMap);
                         continue;
                     }
                 }
 
-                if (key < 24 || key > 101 || (key % 12) > 5)
+                if (note < ProGuitarTrackNote.EasyRed || note > ProGuitarTrackNote.ExpertPurple ||
+                    (key % difficultyRange) > difficultyMaxIndex)
                 {
                     continue;
                 }
 
                 if (parameters.UnknownNotes)
                 {
-                    if (velocity < 100 || velocity > 122)
+                    if (fret < ProGuitarFretNumber.Fret0 || fret > ProGuitarFretNumber.Fret22)
                     {
-                        trackWarnings.AddTimed($"Invalid fret number: note {key} with velocity {velocity} on {name}", note.Time, tempoMap);
+                        trackWarnings.AddTimed($"Invalid fret number: note {key} with velocity {velocity} on {name}", midiNote.Time, tempoMap);
                         continue;
                     }
 
                     if (!Enum.IsDefined(typeof(ProGuitarTrackChannel), channel))
                     {
-                        trackWarnings.AddTimed($"Unknown channel number: note {key} with channel {channel} on {name}", note.Time, tempoMap);
+                        trackWarnings.AddTimed($"Unknown channel number: note {key} with channel {channel} on {name}", midiNote.Time, tempoMap);
                     }
                 }
 
-                Difficulty difficulty = (Difficulty)(((key - 24) / 24) + 1);
-                byte colour = (byte)(key % 24);
-                ProGuitarFretNumber fretNumber = (ProGuitarFretNumber)velocity;
-                notes[difficulty].Add(new ProGuitarNote(colour, fretNumber, note.Time, note.Length));
+                Difficulty difficulty = Difficulty.Easy + ((key - difficultiesStart) / difficultyRange);
+                byte colour = (byte)(key % difficultyRange);
+                notes[difficulty].Add(new ProGuitarNote(colour, fret, midiNote.Time, midiNote.Length));
             }
         }
 

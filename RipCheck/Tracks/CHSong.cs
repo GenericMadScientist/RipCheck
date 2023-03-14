@@ -29,33 +29,33 @@ namespace RipCheck
                 string name = TrackName(track);
                 switch (name)
                 {
-                    case "PART GUITAR":
-                    case "PART GUITAR COOP":
-                    case "PART RHYTHM":
-                    case "PART BASS":
-                    case "PART KEYS":
-                    case "T1 GEMS":
+                    case TrackNames.Guitar:
+                    case TrackNames.GuitarCoop:
+                    case TrackNames.Rhythm:
+                    case TrackNames.Bass:
+                    case TrackNames.Keys:
+                    case TrackNames.GH1Guitar:
                         guitarTracks.Add(name, new GuitarTrack(track, tempoMap, name, parameters));
                         break;
-                    case "PART DRUMS":
+                    case TrackNames.Drums:
                         drumTrack = new DrumsTrack(track, tempoMap, name, parameters);
                         break;
-                    case "PART VOCALS":
-                    case "HARM1":
-                    case "HARM2":
-                    case "HARM3":
+                    case TrackNames.Vocals:
+                    case TrackNames.Harmony1:
+                    case TrackNames.Harmony2:
+                    case TrackNames.Harmony3:
                         vocalsTracks.Add(name, new VocalsTrack(track, tempoMap, name, parameters));
                         break;
-                    case "PART REAL_GUITAR":
-                    case "PART REAL_GUITAR_22":
-                    case "PART REAL_BASS":
-                    case "PART REAL_BASS_22":
+                    case TrackNames.RealGuitar:
+                    case TrackNames.RealGuitar22:
+                    case TrackNames.RealBass:
+                    case TrackNames.RealBass22:
                         proGuitarTracks.Add(name, new ProGuitarTrack(track, tempoMap, name, parameters));
                         break;
-                    case "PART REAL_KEYS_X":
-                    case "PART REAL_KEYS_H":
-                    case "PART REAL_KEYS_M":
-                    case "PART REAL_KEYS_E":
+                    case TrackNames.RealKeysExpert:
+                    case TrackNames.RealKeysHard:
+                    case TrackNames.RealKeysMedium:
+                    case TrackNames.RealKeysEasy:
                         proKeysTracks.Add(name, new ProKeysTrack(track, tempoMap, name, parameters));
                         break;
                 }
@@ -85,16 +85,16 @@ namespace RipCheck
             {
                 foreach (VocalsTrack track in vocalsTracks.Values)
                 {
-                    if (track.Name == "HARM3")
+                    if (track.Name == TrackNames.Harmony3)
                     {
                         // HARM3 does not have phrase markers, so we have to use HARM2's phrases instead
-                        if (!vocalsTracks.ContainsKey("HARM2"))
+                        if (!vocalsTracks.ContainsKey(TrackNames.Harmony2))
                         {
                             warnings.Add("Track HARM3 present without track HARM2, skipping it");
                             continue;
                         }
 
-                        warnings.AddRange(track.RunChecks(vocalsTracks["HARM2"].Phrases));
+                        warnings.AddRange(track.RunChecks(vocalsTracks[TrackNames.Harmony2].Phrases));
                     }
                     else
                     {
