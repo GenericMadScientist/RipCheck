@@ -66,21 +66,13 @@ namespace RipCheck
             var warnings = new Warnings();
 
             var diff = notes[Difficulty.Expert];
-            IEnumerable<INote> kicks = diff.Where((note) => note.Note == (byte)DrumsFretColour.Kick);
-            IEnumerable<INote> doubleKicks = diff.Where((note) => note.Note == (byte)DrumsFretColour.DoubleKick);
+            var kicks = diff.Where((note) => note.Note == (byte)DrumsFretColour.Kick);
+            var doubleKickPositions = diff.Where((note) => note.Note == (byte)DrumsFretColour.DoubleKick)
+                .Select((note) => note.Position).ToHashSet();
 
             foreach (var kick in kicks)
             {
-                bool found = false;
-                foreach (var doubleKick in doubleKicks)
-                {
-                    if (doubleKick.Position == kick.Position)
-                    {
-                        found = true;
-                    }
-                }
-
-                if (!found)
+                if (!doubleKickPositions.Contains(kick.Position))
                 {
                     warnings.AddTimed($"Found Expert kick with no corresponding Expert+ kick on {name}", kick.Position, tempoMap);
                 }
