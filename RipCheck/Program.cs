@@ -20,6 +20,9 @@ namespace RipCheck
         [Option('g', "ghband", Required = false, HelpText = "Excludes the disjoint chord check for GHWT and onward songs.")]
         public bool GHBand { get; set; }
 
+        [Option('x', "expertplus", Required = false, HelpText = "Enables checking for mismatches between Expert and Expert+ kicks on pre-WoR-format charts. (Note: this will assume all charts are pre-WoR-formatted)")]
+        public bool GHExpertPlus { get; set; }
+
         [Option('v', "vocals", Required = false, HelpText = "Enables checking the vocals track for issues.")]
         public bool Vocals { get; set; }
 
@@ -51,6 +54,11 @@ namespace RipCheck
         /// Check Vocals for issues.
         /// </summary>
         public bool Vocals { get; set; }
+
+        /// <summary>
+        /// Check for mismatches between pre-WoR 2x-kick-format charts.
+        /// </summary>
+        public bool GHExpertPlus { get; set; }
 
         /// <summary>
         /// Check for missing tracks.
@@ -98,6 +106,7 @@ namespace RipCheck
                         }
                         parameters.Vocals = o.Vocals;
                         parameters.MissingTracks = o.MissingTracks;
+                        parameters.GHExpertPlus = o.GHExpertPlus;
                     }
 
                     if (directory is null)

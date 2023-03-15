@@ -54,4 +54,5 @@ The options are as follows:
 | `r`/`--rbpro`     | Enables checking of Pro instruments.                                            |
 | `g`/`--ghband`    | Excludes the disjoint chord check for GHWT and onward songs.                    |
 | `v`/`--vocals`    | Enables checking the vocals track for issues.                                   |
+| `x`/`--expertplus`| Enables checking for mismatches between Expert and Expert+ kicks on pre-WoR-format charts. (Note: this will assume all charts are pre-WoR-formatted) |
 | `m`/`--missing`   | Checks for certain missing tracks (vox, guitar, bass, drums, keys).             |
